@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { useContext, useEffect, useState } from "react";
-import { Button, Container, Form, InputGroup } from "react-bootstrap";
+import { Button, Container, Form, InputGroup, Spinner } from "react-bootstrap";
 import SplitRow from "../../components/SplitRow";
 import { useDispatch, useSelector } from "react-redux";
 import { postTransaction } from "../../features/transactions/transactionsSlice";
@@ -105,6 +105,12 @@ export default function CreateTransaction() {
 
     return (
         <Container>
+            <Button
+                onClick={() => navigate(-1)}
+                variant="secondary"
+            >
+                <i className="bi bi-arrow-left"></i>
+            </Button>
             <Form
                 onSubmit={handleSubmit}
             >
@@ -198,7 +204,7 @@ export default function CreateTransaction() {
                         {!splitsAreValid ? <Form.Text className="text-danger">Splits do not add up.</Form.Text> : null}
                     </>
                 }
-                <Button type="submit">Submit</Button>
+                <Button type="submit" disabled={loading}>Submit {loading && <Spinner />}</Button>
             </Form>
         </Container>
     )

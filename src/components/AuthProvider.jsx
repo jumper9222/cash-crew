@@ -1,9 +1,12 @@
 import { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase";
+import { useDispatch } from "react-redux";
+import { fetchTransactionsByUser } from "../features/transactions/transactionsSlice";
 
 const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
+    const dispatch = useDispatch();
     const [currentUser, setCurrentUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
@@ -11,10 +14,16 @@ export default function AuthProvider({ children }) {
         return auth.onAuthStateChanged((user) => {
             setCurrentUser(user);
             setLoading(false);
-        })
-    }, [])
+        });
+    }, []);
 
-    const value = { currentUser, setCurrentUser }
+    useEffect(() => {
+        if (currentUser?.uid) {
+            dispatch(fetchTransactionsByUser(currentUser.uid))
+        }
+    }, [currentUser])
+
+    const value = { currentUser, setCurrentUser, loading }
 
     return (
         <AuthContext.Provider value={value}>

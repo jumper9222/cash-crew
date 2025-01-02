@@ -8,6 +8,7 @@ import EditTransaction from "./pages/forms/EditTransaction";
 import Sidebar from "./components/Sidebar";
 import MonthlyBudget from "./pages/MonthlyBudget";
 import AllTransactions from "./pages/AllTransactions";
+import TransactionPage from "./pages/TransactionPage";
 
 export default function App() {
 
@@ -21,6 +22,7 @@ export default function App() {
           <Route element={<Sidebar />}>
             <Route path="/dashboard" element={<MonthlyBudget />} />
             <Route path="/transactions" element={<AllTransactions />} />
+            <Route path="/transaction/:transaction_id" element={<TransactionPage />} />
             <Route path="/new-transaction" element={<CreateTransaction />} />
             <Route path="/edit-transaction/:transaction_id" element={<EditTransaction />} />
           </Route>

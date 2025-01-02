@@ -13,8 +13,8 @@ export default function Sidebar() {
                     md={2}
                 >
                     <p onClick={() => navigate('/dashboard')}>Dashboard</p>
-                    <p onClick={() => navigate('/monthly-budget')}>Monthly Budget</p>
                     <p onClick={() => navigate('/transactions')}>Transactions</p>
+                    <p onClick={() => navigate('/monthly-budget')}>Monthly Budget</p>
                     <p onClick={() => navigate('/shared-transactions')}>Shared Transactions</p>
                 </Col>
                 <Col className="pt-3" md={10}>

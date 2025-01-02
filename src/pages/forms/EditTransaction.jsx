@@ -1,23 +1,59 @@
 import { DateTime } from "luxon";
-import { useState } from "react";
-import { Button, Container, Form, InputGroup } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Button, Container, Form, InputGroup, Spinner } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchTransactionFromId, updateTransaction } from "../../features/transactions/transactionsSlice";
+import { AuthContext } from "../../components/AuthProvider";
 
 export default function EditTransaction() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { transaction_id } = useParams();
-    const transaction = useSelector(state => state.transactions.transaction_id)
+    const user_id = useContext(AuthContext).currentUser.uid
 
-    const [title, setTitle] = useState(transaction.title);
-    const [description, setDescription] = useState(transaction.description);
-    const [date, setDate] = useState(transaction.date);
-    const [totalAmount, setTotalAmount] = useState(transaction.total_amount);
-    const [currency, setCurrency] = useState(transaction.currency);
-    const [category, setCategory] = useState(transaction.category);
+    const loading = useSelector(state => state.transactions.loading.transactions)
+    const { transaction, splits } = useSelector(fetchTransactionFromId(transaction_id))
+
+    const [title, setTitle] = useState(transaction?.title);
+    const [description, setDescription] = useState(transaction?.description);
+    const [date, setDate] = useState(transaction?.date);
+    const [totalAmount, setTotalAmount] = useState(transaction?.total_amount);
+    const [currency, setCurrency] = useState(transaction?.currency);
+    const [category, setCategory] = useState(transaction?.category);
+    const [paidBy, setPaidBy] = useState(user_id);
+    const [updatedSplits, setUpdatedSplits] = useState([]);
+    const [isSplit, setIsSplit] = useState(splits.length > 1 ? true : false);
+
+    const handleSubmit = (e) => {
+        e.preventDefault(e);
+        const transactionData = {
+            transaction_id,
+            title,
+            description,
+            date,
+            totalAmount,
+            currency,
+            dateModified: DateTime.local().toISO(),
+            category,
+            paidBy,
+            isSplit,
+            splits: updatedSplits
+        }
+        dispatch(updateTransaction({ transactionData, user_id }))
+            .then(() => navigate(-1))
+            .catch((error) => console.error("Error updating transaction: ", error))
+    }
 
     return (
         <Container>
-            <Form>
+            <Button
+                onClick={() => navigate(-1)}
+                variant="secondary"
+            >
+                <i className="bi bi-arrow-left"></i>
+            </Button>
+            <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
                     <Form.Label>Title</Form.Label>
                     <Form.Control
@@ -40,7 +76,10 @@ export default function EditTransaction() {
                     <Form.Control
                         type="date"
                         value={date}
-                        onChange={e => setDate(e.target.value)}
+                        onChange={e => {
+                            setDate(e.target.value)
+                            console.log(date)
+                        }}
                         required
                     />
                 </Form.Group>
@@ -82,7 +121,7 @@ export default function EditTransaction() {
                         <option value="Utilities">Utilities</option>
                     </Form.Select>
                 </Form.Group>
-                <Button type="submit">Submit</Button>
+                <Button type="submit" disabled={loading}>Submit{loading && <Spinner size="sm" />}</Button>
             </Form>
         </Container>
     )
