@@ -1,6 +1,8 @@
 import { Button, Form, InputGroup } from "react-bootstrap";
 
 export default function SplitRow({ amount, user_id, index, handleDeleteSplit, handleUserIdChange, handleSplitAmountChange }) {
+
+
     return (
         <>
             <InputGroup>

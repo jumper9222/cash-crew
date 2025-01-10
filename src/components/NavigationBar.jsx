@@ -1,4 +1,4 @@
-import { Button, Container, Nav, Navbar } from "react-bootstrap";
+import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { useContext } from "react";
@@ -16,24 +16,39 @@ export default function NavigationBar() {
 
     return (
         <>
-            <Navbar>
+            <Navbar
+                style={{ 'background': '#6B8E23' }}
+            >
                 <Container>
-                    <Navbar.Brand>
+                    <Navbar.Brand
+                        href='/'
+                    >
                         Cashcrew
                     </Navbar.Brand>
-                    <Navbar.Collapse>
-                        <Nav>
-                            <Nav.Link href="/">Home</Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>
-                    {currentUser &&
-                        <Button
-                            variant="danger"
-                            onClick={handleLogout}
-                        >
-                            Logout
-                        </Button>
-
+                    {currentUser ?
+                        <NavDropdown title="Current user">
+                            <NavDropdown.Item href="/profile">
+                                Profile
+                            </NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item
+                                onClick={handleLogout}
+                            >
+                                Logout
+                            </NavDropdown.Item>
+                        </NavDropdown>
+                        : <div className="d-flex gap-2">
+                            <Button
+                                onClick={() => navigate('/login')}
+                            >
+                                Login
+                            </Button>
+                            <Button
+                                onClick={() => navigate('/signup')}
+                            >
+                                Signup
+                            </Button>
+                        </div>
                     }
                 </Container >
             </Navbar>

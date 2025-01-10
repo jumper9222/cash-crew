@@ -1,6 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
 
-export default function SharedTransactions() {
+export default function SharedDashboard() {
     return (
         <Container>
             <Row>

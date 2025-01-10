@@ -1,14 +1,17 @@
+import './App.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import LandingPage from "./pages/auth/LandingPage";
 import NavigationBar from "./components/NavigationBar";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
-import CreateTransaction from "./pages/forms/CreateTransaction";
-import EditTransaction from "./pages/forms/EditTransaction";
 import Sidebar from "./components/Sidebar";
-import MonthlyBudget from "./pages/MonthlyBudget";
-import AllTransactions from "./pages/AllTransactions";
+import PersonalDashboard from "./pages/personal/PersonalDashboard";
+import PersonalExpenses from "./pages/personal/PersonalExpenses";
 import TransactionPage from "./pages/TransactionPage";
+import SharedDashboard from "./pages/shared/SharedDashboard";
+import SharedExpenses from "./pages/shared/SharedExpenses";
+import FriendsPage from './pages/shared/FriendsPage';
+import ProfilePage from './pages/ProfilePage';
 
 export default function App() {
 
@@ -16,15 +19,18 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<NavigationBar />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route element={<Sidebar />}>
-            <Route path="/dashboard" element={<MonthlyBudget />} />
-            <Route path="/transactions" element={<AllTransactions />} />
-            <Route path="/transaction/:transaction_id" element={<TransactionPage />} />
-            <Route path="/new-transaction" element={<CreateTransaction />} />
-            <Route path="/edit-transaction/:transaction_id" element={<EditTransaction />} />
+            <Route path="/personal" element={<PersonalDashboard />} />
+            <Route path="/personal/expenses" element={<PersonalExpenses />} >
+              <Route path="/personal/expenses/:transaction_id" element={<TransactionPage />} />
+            </Route>
+            <Route path="/shared" element={<SharedDashboard />} />
+            <Route path="/shared/expenses" element={<SharedExpenses />} />
+            <Route path="/friends" element={<FriendsPage />} />
           </Route>
         </Route>
       </Routes>
