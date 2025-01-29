@@ -3,8 +3,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../features/current-user/currentUserSlice";
-import placeHolderProfilePic from '../../assets/undraw_profile-pic_fatv.svg'
-import cashcrewLogo from '../../assets/cash-crew-logo-no-background.png'
+import placeHolderProfilePic from '../assets/undraw_profile-pic_fatv.svg'
+import cashcrewLogo from '../assets/cash-crew-logo-no-background.png'
 
 export default function NavigationBar() {
     const currentUser = useSelector(state => state.currentUser)
