@@ -1,34 +1,67 @@
-import { useContext, useEffect } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../components/AuthProvider";
+import { auth } from "../../firebase";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function LandingPage() {
     const navigate = useNavigate();
-    const { currentUser } = useContext(AuthContext)
 
     useEffect(() => {
-        if (currentUser) {
-            navigate("/personal")
-        }
-    })
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                navigate('/dashboard')
+            }
+        })
+
+        return () => unsubscribe();
+    }, [navigate])
 
     return (
-        <Container className="py-5 ">
-            <h1>Cashcrew</h1>
-            <p>Your all-in-one PERSONAL and SHARED expense tracker!</p>
-            <div className="d-flex gap-2">
-                <Button
-                    onClick={() => navigate('/signup')}
-                >
-                    Sign up now
-                </Button>
-                <Button
-                    onClick={() => navigate('/login')}
-                >
-                    Sign in
-                </Button>
-            </div>
-        </Container>
+        <div>
+            <Container
+                className="d-flex flex-column justify-content-center"
+                style={{
+                    height: "calc(100vh - 58px)"
+                }}
+            >
+                <Row className="">
+                    <Col className="d-flex flex-column align-items-start justify-content-center" md={5} lg={4}>
+                        <div>
+                            <h1>Cashcrew™</h1>
+                            <p className="me-5">Your all-in-one PERSONAL and SHARED* expense tracker!</p>
+                            <div className="d-flex mb-3 gap-2">
+                                <Button
+                                    style={{
+                                        background: "#bdb275",
+                                        border: "#b4a864"
+                                    }}
+                                    onClick={() => navigate('/signup')}
+                                >
+                                    Sign up now
+                                </Button>
+                                <Button
+                                    style={{
+                                        background: "#bdb275",
+                                        border: "#b4a864"
+                                    }}
+                                    onClick={() => navigate('/login')}
+                                >
+                                    Sign in
+                                </Button>
+                            </div>
+                            <p
+                                className="text-secondary"
+                                style={{ fontSize: '13px' }}
+                            >* Feature coming soon</p>
+                        </div>
+                    </Col>
+                    <Col>
+                        <Image className='mt-5' src='src/assets/undraw_success-factors_3eki.svg' fluid md={7} lg={8} />
+                    </Col>
+                </Row>
+            </Container>
+
+        </div>
     )
 }

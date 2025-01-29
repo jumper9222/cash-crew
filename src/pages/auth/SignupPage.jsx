@@ -1,12 +1,14 @@
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { auth, provider } from "../../firebase";
 import { useNavigate } from "react-router-dom";
-import { setUserDoc } from "../../features/auth/firebaseUserActions";
+import { useDispatch } from "react-redux";
+import { setUserDoc } from "../../features/current-user/currentUserActions"
 
 export default function SignupPage() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     //form states
     const [email, setEmail] = useState('');
@@ -16,24 +18,29 @@ export default function SignupPage() {
     const [isPasswordValid, setIsPasswordValid] = useState(null);
     const [isFormValid, setIsFormValid] = useState(null);
 
+    //Define function to check if form is valid
     const checkFormValidity = () => {
         const form = document.querySelector('form');
         setIsFormValid(form.checkValidity());
     }
 
+    //Define function to check if password is valid
     const checkPasswordValidity = () => {
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~])[a-zA-Z\d!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]{8,30}$/g
         setIsPasswordValid(regex.test(password))
     }
 
+    //useEffect to check form validity
     useEffect(() => {
         checkFormValidity();
     }, [email, password, confirmPassword])
 
+    //useEffect to check if password is valid
     useEffect(() => {
         checkPasswordValidity();
     }, [password])
 
+    //useEffect to check if passwords match
     useEffect(() => {
         if (password === confirmPassword) {
             setPasswordsMatch(true)
@@ -42,13 +49,14 @@ export default function SignupPage() {
         }
     }, [password, confirmPassword])
 
+    //Signup handler
     const handleSignup = (e) => {
         e.preventDefault();
         createUserWithEmailAndPassword(auth, email, password)
-            .then((result) => setUserDoc(result.user))
+            .then((result) => dispatch(setUserDoc(result.user)))
             .then(() => navigate('/personal'))
             .catch((error) => {
-                console.error(error)
+                console.error('Error signing up: ', error.message)
             })
     }
 
@@ -71,7 +79,12 @@ export default function SignupPage() {
     }
 
     return (
-        <Container className="py-5">
+        <Container
+            className="pt-5"
+            style={{
+                height: "calc(100vh - 58px)"
+            }}
+        >
             <Row>
                 <Col></Col>
                 <Col md={8} lg={6} xl={5}>

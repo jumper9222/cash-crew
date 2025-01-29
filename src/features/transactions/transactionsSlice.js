@@ -2,14 +2,13 @@ import { createSlice } from "@reduxjs/toolkit"
 import { DateTime } from "luxon";
 import {
     deleteTransaction,
-    fetchComments,
+    // fetchComments,
     fetchTransactionsByUser,
-    postComment,
+    // postComment,
     postTransaction,
-    updateComment,
+    // updateComment,
     updateTransaction
 } from "./transactionsAsyncThunks";
-
 
 const transactionsSlice = createSlice({
     name: "transactions",
@@ -20,6 +19,7 @@ const transactionsSlice = createSlice({
         splits: {},
         loading: {
             transactions: false,
+            fetchingTransactions: false,
             comments: false,
         }
     },
@@ -28,10 +28,10 @@ const transactionsSlice = createSlice({
         //Fetch transactions
         builder.addCase(fetchTransactionsByUser.pending, (state) => {
             console.log("Fetching transactions...")
-            state.loading.transactions = true;
+            state.loading.fetchingTransactions = true;
         });
         builder.addCase(fetchTransactionsByUser.fulfilled, (state, action) => {
-            const { transactions } = action.payload
+            const transactions = action.payload
             console.log("Transactions fetched successfully")
 
             //Set fetched transactions into transactions stated
@@ -44,7 +44,8 @@ const transactionsSlice = createSlice({
                 currency,
                 paid_by,
                 category,
-                is_split
+                is_split,
+                photo_url
             }) => {
                 if (!acc[transaction_id]) {
                     acc[transaction_id] = {
@@ -56,7 +57,8 @@ const transactionsSlice = createSlice({
                         currency,
                         paid_by,
                         category,
-                        is_split
+                        is_split,
+                        photo_url
                     }
                 }
                 return acc
@@ -89,29 +91,29 @@ const transactionsSlice = createSlice({
                 return transaction.id
             })
             console.log(state.transactions, state.transactionIds)
-            state.loading.transactions = false;
+            state.loading.fetchingTransactions = false;
         });
         builder.addCase(fetchTransactionsByUser.rejected, (state, action) => {
             console.error("Error fetching transactions", action.error.message);
-            state.loading.transactions = false;
+            state.loading.fetchingTransactions = false;
         });
 
         //Fetch comments
-        builder.addCase(fetchComments.pending, (state) => {
-            console.log("Fetching comments...")
-            state.loading.comments = true;
-        });
-        builder.addCase(fetchComments.fulfilled, (state, action) => {
-            console.log("Comments fetched successfully")
-            const comments = action.payload.sort((a, b) => { a.date_created - b.date_created });
-            state.comments = action.payload.reduce((accu, { transaction_id, ...rest }) => {
-                return accu[transaction_id] = { ...rest }
-            }, {})
-        });
-        builder.addCase(fetchComments.rejected, (state, action) => {
-            console.error("Error fetching comments", action.error.message);
-            state.loading.comments = false;
-        });
+        // builder.addCase(fetchComments.pending, (state) => {
+        //     console.log("Fetching comments...")
+        //     state.loading.comments = true;
+        // });
+        // builder.addCase(fetchComments.fulfilled, (state, action) => {
+        //     console.log("Comments fetched successfully")
+        //     const comments = action.payload.sort((a, b) => { a.date_created - b.date_created });
+        //     state.comments = action.payload.reduce((accu, { transaction_id, ...rest }) => {
+        //         return accu[transaction_id] = { ...rest }
+        //     }, {})
+        // });
+        // builder.addCase(fetchComments.rejected, (state, action) => {
+        //     console.error("Error fetching comments", action.error.message);
+        //     state.loading.comments = false;
+        // });
 
         //Post transactions
         builder.addCase(postTransaction.pending, (state) => {
@@ -152,27 +154,27 @@ const transactionsSlice = createSlice({
         });
 
         //Post comments
-        builder.addCase(postComment.pending, (state) => {
-            console.log("Posting comment...")
-            state.loading.comments = true;
-        });
-        builder.addCase(postComment.fulfilled, (state, action) => {
-            console.log("Comment posted successfully.")
-            const transactions = state.transactions
-            const index = transactions.findIndex(transaction => transaction.id === action.payload.transasction_id);
-            const transaction = transactions[index]
-            const comments = transaction?.comments || null
-            if (comments) {
-                comments = [...comments, action.payload]
-            } else {
-                transaction = { ...transaction, comments: [...action.payload] }
-            }
-            state.loading.comments = false;
-        });
-        builder.addCase(postComment.rejected, (state, action) => {
-            console.error("Error posting comment", action.error.message);
-            state.loading.comments = false;
-        });
+        // builder.addCase(postComment.pending, (state) => {
+        //     console.log("Posting comment...")
+        //     state.loading.comments = true;
+        // });
+        // builder.addCase(postComment.fulfilled, (state, action) => {
+        //     console.log("Comment posted successfully.")
+        //     const transactions = state.transactions
+        //     const index = transactions.findIndex(transaction => transaction.id === action.payload.transasction_id);
+        //     const transaction = transactions[index]
+        //     const comments = transaction?.comments || null
+        //     if (comments) {
+        //         comments = [...comments, action.payload]
+        //     } else {
+        //         transaction = { ...transaction, comments: [...action.payload] }
+        //     }
+        //     state.loading.comments = false;
+        // });
+        // builder.addCase(postComment.rejected, (state, action) => {
+        //     console.error("Error posting comment", action.error.message);
+        //     state.loading.comments = false;
+        // });
 
         //Update transactions
         builder.addCase(updateTransaction.pending, (state) => {
@@ -208,9 +210,9 @@ const transactionsSlice = createSlice({
         });
 
         //Update comment
-        builder.addCase(updateComment.pending, (state) => {
-            state.loading.comments = true;
-        })
+        // builder.addCase(updateComment.pending, (state) => {
+        //     state.loading.comments = true;
+        // })
 
         //Delete transaction
         builder.addCase(deleteTransaction.pending, (state) => {
@@ -230,9 +232,9 @@ const transactionsSlice = createSlice({
                         transactions: `, state.transactions)
             state.loading.transactions = false;
         })
-        builder.addCase(deleteTransaction.rejected, (state) => {
+        builder.addCase(deleteTransaction.rejected, (state, action) => {
             state.loading.transactions = false;
-            console.error("There was an error deleting the transaction")
+            console.error("There was an error deleting the transaction: ", action.error.message)
         })
     }
 });

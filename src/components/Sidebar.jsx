@@ -1,61 +1,77 @@
+import React from "react";
 import { useState } from "react";
-import { Col, Collapse, Container, Row } from "react-bootstrap";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Badge, Button, ButtonGroup, Col, Offcanvas, Row, ToggleButton } from "react-bootstrap";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import CreateTransaction from "../pages/forms/CreateTransaction";
 
 export default function Sidebar() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [show, setShow] = useState('');
 
-    const [openPersonal, setOpenPersonal] = useState(false)
-    const [openShared, setOpenShared] = useState(false)
+    const onHide = () => {
+        setShow('')
+    }
 
     return (
-        <Container>
-            <Row>
+        <div>
+            <Row style={{ margin: "0" }}>
                 <Col
-                    style={{ "height": "100vh", 'background': '#D2B48C' }}
-                    className="py-4 ps-4"
+                    style={{ position: "sticky", top: '58px', height: "calc(100vh - 58px)", backgroundColor: "#f2f0e4" }}
+                    className="d-flex flex-column py-3"
                     md={3}
                     lg={2}
                 >
-                    <div>
-                        <strong
-                            onClick={() => setOpenPersonal(!openPersonal)}
-                            aria-controls="personal-menu"
-                            aria-expanded={openPersonal}
-                        >
-                            <i className={!openPersonal ? "bi bi-caret-right-fill" : "bi bi-caret-down-fill"}></i> Personal
-                        </strong>
-                        <Collapse in={openPersonal}>
-                            <div className="ms-4 mt-3 mb-4" id="personal-menu">
-                                <p onClick={() => navigate('/personal')}>Dashboard</p>
-                                <p onClick={() => navigate('/personal/expenses')}>Expenses</p>
-                                <p className="text-secondary">Income</p>
-                                <p className="text-secondary">Budget</p>
-                            </div>
-                        </Collapse>
-                    </div>
-                    <div>
-                        <strong
-                            onClick={() => setOpenShared(!openShared)}
-                            aria-controls="shared-menu"
-                            aria-expanded={openShared}
-                        >
-                            <i className={!openShared ? "bi bi-caret-right-fill" : "bi bi-caret-down-fill"}></i> Shared
-                        </strong>
-                        <Collapse in={openShared}>
-                            <div className="ms-4 mt-3" id={openShared}>
-                                <p onClick={() => navigate('/shared')}>Dashboard</p>
-                                <p onClick={() => navigate('/shared/expenses')}>Expenses</p>
-                                <p onClick={() => navigate('/friends')}>Friends</p>
-                                <p className="text-secondary">Groups</p>
-                            </div>
-                        </Collapse>
-                    </div>
+                    <Button className='mb-5 rounded-pill' variant="light" size="lg" onClick={() => setShow('add-transaction')}><i className="bi bi-plus-lg"></i> Create</Button>
+                    <ButtonGroup vertical className="gap-2">
+                        <SidebarButton
+                            title="Dashboard"
+                            location={location.pathname}
+                            onClick={() => navigate('/dashboard')}
+                            value='/dashboard'
+                        />
+                        <SidebarButton
+                            title="Expenses"
+                            location={location.pathname}
+                            onClick={() => navigate('/expenses')}
+                            value='/expenses'
+                        />
+                        <SidebarButton
+                            title="Friends"
+                            location={location.pathname}
+                            onClick={() => navigate('/friends')}
+                            value='/friends'
+                        />
+                        <SidebarButton disabled title={<span>Income <Badge bg="secondary">Coming Soon!</Badge></span>} />
+                        <SidebarButton disabled title={<span>Budget <Badge bg="secondary">Coming Soon!</Badge></span>} />
+                    </ButtonGroup>
                 </Col>
-                <Col className="pt-3" md={9} lg={10}>
+                <Col
+                    className="p-3 pt-4"
+                    md={9}
+                    lg={10}
+                >
                     <Outlet />
                 </Col>
             </Row>
-        </Container>
+            <CreateTransaction show={show} onHide={onHide} />
+        </div>
     )
+}
+
+function SidebarButton({ title, disabled, onClick, location, value }) {
+    return <ToggleButton
+        style={{
+            color: '#282740'
+        }}
+        variant="light"
+        className={"d-flex rounded-pill align-items-start"}
+        disabled={disabled}
+        onClick={onClick}
+        type="radio"
+        value={value}
+        checked={location && location.includes(value)}
+    >
+        {title}
+    </ToggleButton>
 }

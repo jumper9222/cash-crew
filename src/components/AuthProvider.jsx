@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { useDispatch } from "react-redux";
 import { fetchTransactionsByUser } from "../features/transactions/transactionsAsyncThunks";
-import { fetchFriendsByUserId } from "../features/friends/friendsAsyncThunks";
+import { fetchFriendsByEmail } from "../features/friends/friendsAsyncThunks";
 
 const AuthContext = createContext(null);
 
@@ -21,7 +21,7 @@ export default function AuthProvider({ children }) {
     useEffect(() => {
         if (currentUser) {
             dispatch(fetchTransactionsByUser(currentUser.uid))
-            dispatch(fetchFriendsByUserId(currentUser.uid))
+            dispatch(fetchFriendsByEmail(currentUser.uid))
         }
     }, [currentUser])
 

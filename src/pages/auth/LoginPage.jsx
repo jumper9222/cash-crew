@@ -1,6 +1,6 @@
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { auth, provider } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +10,7 @@ export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isFormValid, setIsFormValid] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const checkFormValidity = () => {
         const form = document.querySelector('form');
@@ -20,31 +21,42 @@ export default function LoginPage() {
         checkFormValidity();
     }, [email, password])
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
+        setLoading(true);
         e.preventDefault();
         signInWithEmailAndPassword(auth, email, password)
             .then((result) => {
                 console.log(result);
-                navigate('/personal')
+                setLoading(false);
+                navigate('/dashboard')
             })
             .catch((error) => {
+                setLoading(false);
                 console.error(error);
             })
     }
 
     const handleLoginWithGoogle = () => {
+        setLoading(true);
         signInWithPopup(auth, provider)
             .then((result) => {
                 console.log(result);
-                navigate('/personal')
+                setLoading(false);
+                navigate('/dashboard')
             })
             .catch((error) => {
+                setLoading(false);
                 console.error(error);
             })
     }
 
     return (
-        <Container className="pt-5">
+        <Container
+            className="pt-5"
+            style={{
+                height: "calc(100vh - 58px)"
+            }}
+        >
             <Row>
                 <Col></Col>
                 <Col md={8} lg={6} xl={5}>
@@ -83,11 +95,11 @@ export default function LoginPage() {
                             </Card.Body>
                             <Card.Footer className="d-flex justify-content-end">
                                 <Button
-                                    disabled={!isFormValid}
+                                    disabled={!isFormValid || loading}
                                     type="submit"
                                     data-testid="submitButton"
                                 >
-                                    Login</Button>
+                                    Login {loading && <Spinner size="sm" />}</Button>
                             </Card.Footer>
                         </Form>
                     </Card>

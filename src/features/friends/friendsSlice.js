@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addFriend, fetchFriendsByUserId } from "./friendsAsyncThunks";
+import { addFriend, fetchFriendsByEmail } from "./friendsAsyncThunks";
+import { getCurrentUserFromDB } from "../current-user/currentUserActions";
 
 const friendsSlice = createSlice({
     name: 'friends',
     initialState: {
         friends: {},
+        friendEmails: [],
         loading: false
     },
     reducers: {},
@@ -14,9 +16,10 @@ const friendsSlice = createSlice({
             console.log('Attempting to add friend...')
         });
         builder.addCase(addFriend.fulfilled, (state, action) => {
-            const { email, uid, ...rest } = action.payload;
+            const { email, ...rest } = action.payload;
             console.log(action.payload)
-            state.friends[email] = { email, ...rest }
+            state.friends = { ...state.friends, [email]: { email, ...rest } }
+            state.friendEmails = [...state.friendEmails, email]
             console.log('Friend added successfully.', state.friends)
             state.loading = false;
         });
@@ -24,22 +27,34 @@ const friendsSlice = createSlice({
             console.log('Attempt to add friend failed: ', action.error.message)
             state.loading = false;
         });
-        builder.addCase(fetchFriendsByUserId.pending, (state) => {
+        builder.addCase(fetchFriendsByEmail.pending, (state) => {
             state.loading = true;
             console.log('Fetching friends from firestore...')
         })
-        builder.addCase(fetchFriendsByUserId.fulfilled, (state, action) => {
+        builder.addCase(fetchFriendsByEmail.fulfilled, (state, action) => {
             const friends = action.payload;
-            console.log(action.payload)
-            state.friends = friends.map(({ email, uid, ...rest }) => {
-                return state.friends[email] = { email, ...rest }
-            })
+            if (!friends) {
+                console.log('You have no friends 😢')
+                return
+            }
+
+            console.log('fetchFriendsByEmail: ', action.payload)
+            state.friends = friends.reduce((accu, { uid, ...rest }) => {
+                accu[uid] = { uid, ...rest }
+                return accu
+            }, {})
             console.log('Friends fetched successfully.', state.friends)
             state.loading = false;
         });
-        builder.addCase(fetchFriendsByUserId.rejected, (state, action) => {
+        builder.addCase(fetchFriendsByEmail.rejected, (state, action) => {
             console.log('Attempt to fetch friends failed: ', action.error.message)
             state.loading = false;
+        });
+        builder.addCase(getCurrentUserFromDB.fulfilled, (state, action) => {
+            const { friends } = action.payload;
+            state.friendEmails = action.payload.friends ? [...friends] : [];
+            state.loading = false;
+            console.log('Successfully fetched friends emails array: ', state.friendEmails)
         });
     }
 })

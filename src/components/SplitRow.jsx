@@ -1,32 +1,47 @@
-import { Button, Form, InputGroup } from "react-bootstrap";
+import { Form, InputGroup } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import SearchSuggestionList from "./SearchSuggestionList";
 
-export default function SplitRow({ amount, user_id, index, handleDeleteSplit, handleUserIdChange, handleSplitAmountChange }) {
-
+export default function SplitRow({
+    amount,
+    email,
+    handleEmailField,
+    handleAmountField,
+    handleAmountBlur,
+    handleEmailFocus,
+    handleEmailBlur,
+    handleSuggestionClick,
+    suggestions,
+    isActive,
+    splitIndex
+}) {
+    const friends = useSelector(state => state.friends.friends);
 
     return (
-        <>
-            <InputGroup>
-                <Form.Select
-                    value={user_id}
-                    onChange={e => handleUserIdChange(index, e.target.value)}
-                >
-                    <option value="Person 1">Person 1</option>
-                    <option value="Person 2">Person 2</option>
-                    <option value="Person 3">Person 3</option>
-                </Form.Select>
+        <div>
+            <InputGroup >
+                <Form.Control
+                    type="text"
+                    value={email || ''}
+                    onChange={handleEmailField}
+                    onFocus={handleEmailFocus}
+                    onBlur={handleEmailBlur}
+                />
                 <Form.Control
                     type="number"
-                    value={amount}
-                    onChange={e => handleSplitAmountChange(index, e.target.value)}
-                    onBlur={() => {
-                        if (amount) {
-                            handleSplitAmountChange(index, parseFloat(amount).toFixed(2))
-                        }
-                    }}
+                    value={amount || 0}
+                    onChange={handleAmountField}
+                    onBlur={handleAmountBlur}
                     step="0.01"
                 />
             </InputGroup>
-            <Button onClick={() => handleDeleteSplit(index)}>Delete</Button>
-        </>
+            {suggestions.length > 0 && isActive &&
+                <SearchSuggestionList
+                    splitIndex={splitIndex}
+                    suggestions={suggestions}
+                    handleSuggestionClick={handleSuggestionClick}
+                />
+            }
+        </div>
     )
 }

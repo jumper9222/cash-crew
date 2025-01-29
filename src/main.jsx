@@ -10,9 +10,9 @@ import AuthProvider from './components/AuthProvider.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      {/* <AuthProvider> */}
+      <App />
+      {/* </AuthProvider> */}
     </Provider>
   </StrictMode>,
 )

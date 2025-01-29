@@ -1,15 +1,15 @@
 import { DateTime } from "luxon";
-import { useContext, useState } from "react";
-import { Button, Form, InputGroup, Modal, Spinner } from "react-bootstrap";
+import { useState, useEffect, useRef } from "react";
+import { Button, Form, Image, InputGroup, Modal, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../components/AuthProvider";
+import { useNavigate, useParams } from "react-router-dom";
 import { updateTransaction } from "../../features/transactions/transactionsAsyncThunks";
+import axios from "axios";
 
 export default function EditTransaction({ show, onHide, transactionObject }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const user_id = useContext(AuthContext).currentUser.uid
+    const { uid, settings } = useSelector(state => state.currentUser)
 
     const loading = useSelector(state => state.transactions.loading.transactions)
     const { transaction, splits } = transactionObject
@@ -18,11 +18,45 @@ export default function EditTransaction({ show, onHide, transactionObject }) {
     const [description, setDescription] = useState(transaction?.description);
     const [date, setDate] = useState(transaction?.date);
     const [totalAmount, setTotalAmount] = useState(transaction?.total_amount);
-    const [currency, setCurrency] = useState(transaction?.currency);
+    const [currency, setCurrency] = useState(transaction?.currency.toUpperCase());
     const [category, setCategory] = useState(transaction?.category);
-    const [paidBy, setPaidBy] = useState(user_id);
+    const [paidBy, setPaidBy] = useState(uid);
+    const [image, setImage] = useState(null);
     const [updatedSplits, setUpdatedSplits] = useState([]);
     const [isSplit, setIsSplit] = useState(splits.length > 1 ? true : false);
+    const [currencies, setCurrencies] = useState({})
+    const [thumbnail, setThumbnail] = useState(transaction?.photo_url);
+
+    const [showModal, setShowModal] = useState(false);
+    const fileInputRef = useRef(null)
+
+    const fetchCurrencies = async () => {
+        const currencies = await axios.get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.min.json')
+        return currencies.data
+    }
+
+    useEffect(() => {
+        setTitle(transaction?.title);
+        setDescription(transaction?.description);
+        setDate(transaction?.date);
+        setTotalAmount(transaction?.total_amount);
+        setCurrency(transaction?.currency.toUpperCase());
+        setCategory(transaction?.category);
+        setPaidBy(transaction?.paid_by);
+        setUpdatedSplits([]);
+        setIsSplit(splits.length > 1 ? true : false);
+        setThumbnail(transaction?.photo_url);
+    }, [transactionObject])
+
+    useEffect(() => {
+        fetchCurrencies().then((currencies) => {
+            setCurrencies(currencies)
+        })
+    }, [])
+
+    const handleAddImage = () => {
+        fileInputRef.current.click()
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault(e);
@@ -37,17 +71,21 @@ export default function EditTransaction({ show, onHide, transactionObject }) {
             category,
             paidBy,
             isSplit,
+            image,
+            photoURL: transaction?.photo_url || null,
             splits: updatedSplits
         }
-        dispatch(updateTransaction({ transactionData, user_id }))
+        dispatch(updateTransaction({ transactionData, user_id: uid }))
             .then(() => navigate(-1))
             .catch((error) => console.error("Error updating transaction: ", error))
     }
 
     return (
         <Modal show={show === 'edit-transaction'} onHide={onHide} centered>
-            <Modal.Header>Edit Transaction</Modal.Header>
-            <Form onSubmit={handleSubmit}>
+            <Modal.Header closeButton>Edit Transaction</Modal.Header>
+            <Form
+                onSubmit={handleSubmit}
+            >
                 <Modal.Body>
                     <Form.Group className="mb-3">
                         <Form.Label>Title</Form.Label>
@@ -71,10 +109,7 @@ export default function EditTransaction({ show, onHide, transactionObject }) {
                         <Form.Control
                             type="date"
                             value={date}
-                            onChange={e => {
-                                setDate(e.target.value)
-                                console.log(date)
-                            }}
+                            onChange={e => setDate(e.target.value)}
                             required
                         />
                     </Form.Group>
@@ -98,7 +133,12 @@ export default function EditTransaction({ show, onHide, transactionObject }) {
                             onChange={e => setCurrency(e.target.value)}
                             required
                         >
-                            <option value="MYR">MYR</option>
+                            <option>Select currency</option>
+                            {Object.entries(currencies).map(([key, value]) => {
+                                return (
+                                    <option key={key} value={key.toUpperCase()}>{key.toUpperCase()} - {value}</option>
+                                )
+                            })}
                         </Form.Select>
                     </InputGroup>
                     <Form.Group className="mb-3">
@@ -109,12 +149,31 @@ export default function EditTransaction({ show, onHide, transactionObject }) {
                             required
                         >
                             <option>Select a Category</option>
-                            <option value="Eating Out">Eating Out</option>
-                            <option value="Groceries">Groceries</option>
-                            <option value="Transportation">Transportation</option>
-                            <option value="Shopping">Shopping</option>
-                            <option value="Utilities">Utilities</option>
+                            {settings.categories.map((category, i) => (
+                                <option key={i} value={category}>{category}</option>
+                            ))}
                         </Form.Select>
+                    </Form.Group>
+                    {thumbnail && <Image className="mb-3" width='50px' src={thumbnail} onClick={() => setShowModal(true)} fluid />}
+                    <Form.Group className="mb-2">
+                        <Form.Control
+                            className="d-none"
+                            type="file"
+                            onChange={(e) => {
+                                console.log(e.target.files)
+                                const file = e.target.files[0]
+                                setImage(file)
+                                if (file) {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                        setThumbnail(reader.result)
+                                    };
+                                    reader.readAsDataURL(file)
+                                }
+                            }}
+                            ref={fileInputRef}
+                        />
+                        <Button onClick={handleAddImage}>Add Image</Button>
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>

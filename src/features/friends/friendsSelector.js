@@ -8,3 +8,10 @@ export const selectFriendById = (id) => createSelector(
         return friends[id]
     }
 )
+
+export const selectFriendDisplayNameById = (id) => createSelector(
+    [getFriends],
+    (friends) => {
+        return friends[id]?.displayName || friends[id].email
+    }
+)

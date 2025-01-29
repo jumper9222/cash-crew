@@ -1,13 +1,12 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Button, Container, InputGroup, Form, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { addFriend } from "../../features/friends/friendsAsyncThunks";
-import { AuthContext } from "../../components/AuthProvider";
 
 export default function FriendsPage() {
     const dispatch = useDispatch();
 
-    const { uid } = useContext(AuthContext).currentUser
+    const { uid } = useSelector(state => state.currentUser)
 
     //Selectors
     const friends = useSelector(state => state.friends.friends)
@@ -20,7 +19,7 @@ export default function FriendsPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
         dispatch(addFriend({ email: query, uid }))
-            .then(result => console.log(result))
+            .then(() => console.log('Friend added successfully.'))
             .catch(error => console.error('Error adding friends: ', error.message))
     }
 
@@ -44,7 +43,7 @@ export default function FriendsPage() {
                         return (
                             <Row className="mt-3" key={key}>
                                 <Col>
-                                    <p>Display name: {friend.displayName}</p>
+                                    <p>Display name: <strong>{friend.displayName ? friend.displayName : friend.email}</strong></p>
                                     <p>Email: {friend.email}</p>
                                 </Col>
                             </Row>
