@@ -13,7 +13,7 @@ export default function ProfilePage() {
     const currentUser = useSelector(state => state.currentUser)
     const loading = currentUser.loading;
 
-    const placeHolderProfilePic = 'src/assets/undraw_profile-pic_fatv.svg'
+    const placeHolderProfilePic = 'public/assets/undraw_profile-pic_fatv.svg'
     const genderFormatted = currentUser ? currentUser.gender.charAt(0).toUpperCase() + currentUser.gender.slice(1) : null
 
     //Basic info react states

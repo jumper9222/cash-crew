@@ -57,7 +57,7 @@ export default function LandingPage() {
                         </div>
                     </Col>
                     <Col>
-                        <Image className='mt-5' src='src/assets/undraw_success-factors_3eki.svg' fluid md={7} lg={8} />
+                        <Image className='mt-5' src='public/assets/undraw_success-factors_3eki.svg' fluid md={7} lg={8} />
                     </Col>
                 </Row>
             </Container>

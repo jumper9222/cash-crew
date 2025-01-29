@@ -9,7 +9,7 @@ export default function NavigationBar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const placeHolderProfilePic = 'src/assets/undraw_profile-pic_fatv.svg'
+    const placeHolderProfilePic = 'public/assets/undraw_profile-pic_fatv.svg'
 
     const handleLogout = () => {
         auth.signOut()
