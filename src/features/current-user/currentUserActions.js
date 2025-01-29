@@ -11,7 +11,7 @@ export const setUserDoc = createAsyncThunk(
         const { displayName, email, phoneNumber, photoURL, uid } = userData
         const userRef = doc(db, 'users', uid)
         await setDoc(userRef, { displayName, email, phoneNumber, photoURL, uid }, { merge: true })
-        return userData;
+        return { displayName, email, phoneNumber, photoURL, uid };
     })
 
 //Fetch user data from DB when logging in

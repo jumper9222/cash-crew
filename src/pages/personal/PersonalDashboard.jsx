@@ -4,13 +4,12 @@ import {
     calculateTotalPersonalExpenseByMonth
 } from "../../features/transactions/transactionsSelectors";
 import { useSelector } from "react-redux";
-import { auth } from "../../firebase";
-import PersonalAndSharedTabs from "../../components/PersonalAndSharedTabs";
 import { DateTime } from "luxon";
+import PersonalAndSharedTabs from "../../components/PersonalAndSharedTabs";
 import Chart from "react-google-charts";
 
 export default function PersonalDashboard() {
-    const user_id = auth.currentUser.uid;
+    const user_id = useSelector(state => state.currentUser.uid)
     const date = DateTime.now()
 
     const totalPersonalExpense = useSelector(calculateTotalPersonalExpenseByMonth(user_id, date.month, date.year)).toFixed(2)

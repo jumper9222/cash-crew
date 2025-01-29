@@ -23,7 +23,7 @@ export default function CreateTransaction({ show, onHide }) {
     const currentDate = DateTime.local().toFormat('yyyy-MM-dd');
     const [date, setDate] = useState(currentDate);
     const [totalAmount, setTotalAmount] = useState(0);
-    const [currency, setCurrency] = useState(settings.defaultCurrency.toUpperCase());
+    const [currency, setCurrency] = useState(settings?.defaultCurrency ? settings?.defaultCurrency.toUpperCase() : '');
     const [category, setCategory] = useState('');
     const [isSplit, setIsSplit] = useState(false);
     const [currencies, setCurrencies] = useState({})
@@ -77,6 +77,12 @@ export default function CreateTransaction({ show, onHide }) {
             setCurrencies(currencies)
         })
     }, [])
+
+    // useEffect(() => {
+    //     if (settings) {
+    //         setCurrency(settings.defaultCurrency.toUpperCase());
+    //     }
+    // }, [settings])
 
     useEffect(() => {
         console.log('split type ref useeffect: ', splitType)
@@ -293,7 +299,7 @@ export default function CreateTransaction({ show, onHide }) {
                                 required
                             >
                                 <option>Select a Category</option>
-                                {settings.categories.map((category, i) => (
+                                {settings?.categories && settings?.categories.map((category, i) => (
                                     <option key={i} value={category}>{category}</option>
                                 ))}
                             </Form.Select>

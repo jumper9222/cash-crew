@@ -33,7 +33,17 @@ const currentUserSlice = createSlice({
             state.uid = '';
             state.birthday = '';
             state.gender = '';
-            state.settings = {};
+            state.settings = {
+                defaultCurrency: 'MYR',
+                categories: [
+                    'Eating Out',
+                    'Groceries',
+                    'Utilities',
+                    'Transaportation',
+                    'Shopping',
+                    'Pets'
+                ]
+            };
         }
     },
     extraReducers: (builder) => {

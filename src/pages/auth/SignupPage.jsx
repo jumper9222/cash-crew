@@ -62,11 +62,9 @@ export default function SignupPage() {
 
     const handleSignupWithGoogle = () => {
         signInWithPopup(auth, provider)
-            .then((result) => {
-                const user = result.user;
-                setUserDoc(user)
-                navigate('/personal')
-            }).catch((error) => {
+            .then((result) => dispatch(setUserDoc(result.user)))
+            .then(() => navigate('/dashboard'))
+            .catch((error) => {
                 // Handle Errors here.
                 const errorCode = error.code;
                 const errorMessage = error.message;
