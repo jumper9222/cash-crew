@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import image01 from "src/assets/undraw_success-factors_3eki.svg"
+import image01 from "../../assets/undraw_success-factors_3eki.svg"
 
 export default function LandingPage() {
     const navigate = useNavigate();

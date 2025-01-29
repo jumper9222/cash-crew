@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Card, Col, Container, Form, Image, ListGroup, Row, Spinner } from "react-bootstrap";
 import { updateBasicInfo } from "../features/current-user/currentUserActions";
 import { useDispatch, useSelector } from "react-redux";
-import placeHolderProfilePic from 'src/assets/undraw_profile-pic_fatv.svg'
+import placeHolderProfilePic from '../assets/undraw_profile-pic_fatv.svg'
 
 export default function ProfilePage() {
     //Import dispatch 
