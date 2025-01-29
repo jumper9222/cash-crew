@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Button, Card, Col, Container, Form, Image, ListGroup, Row, Spinner } from "react-bootstrap";
-import { auth } from "../firebase";
-import { signInWithPhoneNumber } from "firebase/auth";
 import { updateBasicInfo } from "../features/current-user/currentUserActions";
 import { useDispatch, useSelector } from "react-redux";
+import placeHolderProfilePic from 'public/assets/undraw_profile-pic_fatv.svg'
 
 export default function ProfilePage() {
     //Import dispatch 
@@ -13,7 +12,6 @@ export default function ProfilePage() {
     const currentUser = useSelector(state => state.currentUser)
     const loading = currentUser.loading;
 
-    const placeHolderProfilePic = 'public/assets/undraw_profile-pic_fatv.svg'
     const genderFormatted = currentUser ? currentUser.gender.charAt(0).toUpperCase() + currentUser.gender.slice(1) : null
 
     //Basic info react states

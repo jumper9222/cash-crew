@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
+import image01 from "src/assets/undraw_success-factors_3eki.svg"
 
 export default function LandingPage() {
     const navigate = useNavigate();
@@ -57,7 +58,7 @@ export default function LandingPage() {
                         </div>
                     </Col>
                     <Col>
-                        <Image className='mt-5' src='public/assets/undraw_success-factors_3eki.svg' fluid md={7} lg={8} />
+                        <Image className='mt-5' src={image01} fluid md={7} lg={8} />
                     </Col>
                 </Row>
             </Container>

@@ -3,13 +3,13 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../features/current-user/currentUserSlice";
+import placeHolderProfilePic from 'public/assets/undraw_profile-pic_fatv.svg'
+import cashcrewLogo from 'src\assets\cash-crew-logo-no-background.png'
 
 export default function NavigationBar() {
     const currentUser = useSelector(state => state.currentUser)
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const placeHolderProfilePic = 'public/assets/undraw_profile-pic_fatv.svg'
 
     const handleLogout = () => {
         auth.signOut()
@@ -28,7 +28,7 @@ export default function NavigationBar() {
                     href={currentUser?.uid ? '/dashboard' : '/'}
                 >
                     <div className="d-flex position-relative">
-                        <Image src="src\assets\cash-crew-logo-no-background.png" height='32px' width='32px' className="me-1" />
+                        <Image src={cashcrewLogo} height='32px' width='32px' className="me-1" />
                         <div className="position-absolute" style={{ left: '38px', top: '1px', fontWeight: '500', color: '#282740', fontSize: '24px' }}>Cashcrew</div>
                     </div>
                 </Navbar.Brand>
