@@ -1,5 +1,4 @@
 import { Card, Col, ListGroup, Row } from "react-bootstrap";
-import '../app.css'
 import { useSelector } from "react-redux";
 
 export default function TransactionRow({ transaction, onClick }) {

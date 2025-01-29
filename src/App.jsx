@@ -1,4 +1,3 @@
-import './App.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import LandingPage from "./pages/auth/LandingPage";
