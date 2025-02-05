@@ -40,15 +40,15 @@ export default function ProfilePage() {
     return (
         <Container
             style={{ height: "calc(100vh - 58px)" }}
-            className="my-5"
+            className="py-5 px-3 bg-light"
         >
             <Row>
                 <Col></Col>
                 <Col md={8} lg={7} xl={6} className="d-flex flex-column gap-3">
                     <h4>Welcome to your profile!</h4>
                     <Card>
-                        <Card.Header className="d-flex">
-                            <Card.Title>Basic Info</Card.Title>
+                        <Card.Header className="d-flex align-items-center">
+                            Basic Info
                             <div className="ms-auto">
                                 <Button
                                     onClick={() => setEditBasic(!editBasic)}
@@ -73,7 +73,8 @@ export default function ProfilePage() {
                                         <Col className="d-flex flex-column">
                                             <Image
                                                 className="my-2"
-                                                style={{ 'width': '72px' }}
+                                                width={'72px'}
+                                                height={'72px'}
                                                 src={thumbnail || placeHolderProfilePic}
                                                 roundedCircle
                                             />
@@ -174,7 +175,7 @@ export default function ProfilePage() {
                     </Card>
                     <Card>
                         <Card.Header>
-                            <Card.Title>Contact Info</Card.Title>
+                            Contact Info
                         </Card.Header>
                         <Card.Body>
                             <ListGroup>

@@ -21,7 +21,7 @@ export default function LandingPage() {
     return (
         <div>
             <Container
-                className="d-flex flex-column justify-content-center"
+                className="d-flex flex-column justify-content-center px-5 bg-light"
                 style={{
                     height: "calc(100vh - 58px)"
                 }}
@@ -33,19 +33,11 @@ export default function LandingPage() {
                             <p className="me-5">Your all-in-one PERSONAL and SHARED* expense tracker!</p>
                             <div className="d-flex mb-3 gap-2">
                                 <Button
-                                    style={{
-                                        background: "#bdb275",
-                                        border: "#b4a864"
-                                    }}
                                     onClick={() => navigate('/signup')}
                                 >
                                     Sign up now
                                 </Button>
                                 <Button
-                                    style={{
-                                        background: "#bdb275",
-                                        border: "#b4a864"
-                                    }}
                                     onClick={() => navigate('/login')}
                                 >
                                     Sign in

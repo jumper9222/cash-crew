@@ -1,7 +1,7 @@
-import { Col, Container, ListGroup, Row } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import TransactionRow from "../../components/TransactionRow";
 import PersonalAndSharedTabs from "../../components/PersonalAndSharedTabs";
@@ -10,10 +10,21 @@ import { groupPersonalTransactionsByDate } from "../../features/transactions/tra
 export default function PersonalExpenses() {
     const navigate = useNavigate();
     const params = useParams();
+    const [isLgScreen, setIsLgScreen] = useState(window.innerWidth >= 992)
 
     const { uid } = useSelector(state => state.currentUser)
     const groupedTransactions = useSelector(groupPersonalTransactionsByDate(uid))
     const loading = useSelector((state) => state.transactions.loading.transactions);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLgScreen(window.innerWidth >= 992);
+        };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    const isFullPage = !isLgScreen && location.pathname !== '/expenses'
 
     const handleOpenTransaction = (transaction_id) => {
         if (params.transaction_id !== transaction_id) {
@@ -23,11 +34,19 @@ export default function PersonalExpenses() {
         }
     }
 
+    if (isFullPage) {
+        return (
+            <div className="flex-grow-1">
+                <Outlet />
+            </div>
+        );
+    }
+
     return (
         <Container>
             <Row>
                 < h3 className="mb-3">Expenses</h3>
-                <Col className="d-flex flex-column">
+                <Col className="d-flex flex-column" sm md={12} lg={6}>
                     <div>
                         <PersonalAndSharedTabs currentPage='/expenses' />
                     </div>
@@ -53,9 +72,13 @@ export default function PersonalExpenses() {
                             : (<p>No transactions yet</p>)
                     }
                 </Col>
-                <Col style={{ position: "sticky", top: "86px", alignSelf: "flex-start" }}>
-                    <Outlet />
-                </Col>
+                {isLgScreen && (
+                    <Col
+                        className="mt-3 d-none d-lg-block"
+                        style={{ position: "sticky", top: "0px", alignSelf: 'self-start' }}>
+                        <Outlet />
+                    </Col>
+                )}
             </Row>
         </Container >
     )

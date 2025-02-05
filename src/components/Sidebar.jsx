@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Badge, Button, ButtonGroup, Col, Offcanvas, Row, ToggleButton } from "react-bootstrap";
+import { Badge, Button, ButtonGroup, Col, Row, ToggleButton } from "react-bootstrap";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import CreateTransaction from "../pages/forms/CreateTransaction";
 
@@ -15,14 +15,58 @@ export default function Sidebar() {
 
     return (
         <div>
-            <Row style={{ margin: "0" }}>
+            <Row
+                className="d-md-none p-2 ps-3 mb-1"
+                style={{
+                    overflow: 'auto',
+                    position: 'sticky',
+                    bottom: '50px'
+                }}
+            >
+                <ButtonGroup className="gap-2">
+                    <SidebarButton
+                        title="Dashboard"
+                        location={location.pathname}
+                        onClick={() => navigate('/dashboard')}
+                        value='/dashboard'
+                    />
+                    <SidebarButton
+                        title="Expenses"
+                        location={location.pathname}
+                        onClick={() => navigate('/expenses')}
+                        value='/expenses'
+                    />
+                    <SidebarButton
+                        title="Friends"
+                        location={location.pathname}
+                        onClick={() => navigate('/friends')}
+                        value='/friends'
+                    />
+                    <SidebarButton disabled title={<span>Income</span>} />
+                    <SidebarButton disabled title={<span>Budget</span>} />
+                </ButtonGroup>
+            </Row>
+            <Row
+                className="me-sm-0 mx-1"
+            >
                 <Col
-                    style={{ position: "sticky", top: '58px', height: "calc(100vh - 58px)", backgroundColor: "#f2f0e4" }}
-                    className="d-flex flex-column py-3"
-                    md={3}
-                    lg={2}
+                    style={{
+                        position: "sticky",
+                        top: '58px',
+                        height: "calc(100vh - 58px)",
+                        width: "240px"
+                    }}
+                    className="d-none d-md-flex flex-column p-3 bg-navbars"
+                    lg={'auto'}
                 >
-                    <Button className='mb-5 rounded-pill' variant="light" size="lg" onClick={() => setShow('add-transaction')}><i className="bi bi-plus-lg"></i> Create</Button>
+                    <Button
+                        className='mb-5 rounded-pill'
+                        variant="light"
+                        size="lg"
+                        onClick={() => setShow('add-transaction')}
+                    >
+                        <i className="bi bi-plus-lg"></i> Create
+                    </Button>
                     <ButtonGroup vertical className="gap-2">
                         <SidebarButton
                             title="Dashboard"
@@ -47,11 +91,25 @@ export default function Sidebar() {
                     </ButtonGroup>
                 </Col>
                 <Col
-                    className="p-3 pt-4"
-                    md={9}
-                    lg={10}
+                    className="position-relative p-md-4 p-3 me-md-3 ms-md-0 mx-2 rounded-5 bg-light custom-scrollbar"
                 >
                     <Outlet />
+                    <div
+                        className="d-flex d-md-none position-fixed bottom-0 end-0"
+                    >
+                        <Button
+                            onClick={() => setShow('add-transaction')}
+                            className="align-self-end ms-auto rounded-pill m-4"
+                            size="lg"
+                            style={{
+                                width: '64px',
+                                height: '64px',
+                                zIndex: '1000'
+                            }}
+                        >
+                            <i className="bi bi-plus-lg"></i>
+                        </Button>
+                    </div>
                 </Col>
             </Row>
             <CreateTransaction show={show} onHide={onHide} />
@@ -61,9 +119,6 @@ export default function Sidebar() {
 
 function SidebarButton({ title, disabled, onClick, location, value }) {
     return <ToggleButton
-        style={{
-            color: '#282740'
-        }}
         variant="light"
         className={"d-flex rounded-pill align-items-start"}
         disabled={disabled}

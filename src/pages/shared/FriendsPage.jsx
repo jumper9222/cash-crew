@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Button, Container, InputGroup, Form, Row, Col } from "react-bootstrap";
+import { Button, Container, InputGroup, Form, Row, Col, ListGroup, ListGroupItem, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { addFriend } from "../../features/friends/friendsAsyncThunks";
+import placeholderImage from "../../assets/undraw_profile-pic_fatv.svg";
 
 export default function FriendsPage() {
     const dispatch = useDispatch();
@@ -37,23 +38,45 @@ export default function FriendsPage() {
                     <Button type="submit">Add friend</Button>
                 </InputGroup>
             </Form>
-            <div>
+            <ListGroup
+                className="mt-3 flex-grow-1 overflow-auto"
+            >
                 {Object.values(friends).length > 0 && !loading
                     ? Object.entries(friends).map(([key, friend]) => {
                         return (
-                            <Row className="mt-3" key={key}>
-                                <Col>
-                                    <p>Display name: <strong>{friend.displayName ? friend.displayName : friend.email}</strong></p>
-                                    <p>Email: {friend.email}</p>
-                                </Col>
-                            </Row>
+                            <ListGroupItem key={key}>
+                                <Row>
+                                    <Col
+                                        className="d-flex flex-column justify-content-center align-items-center"
+                                        xs={'auto'}
+                                    >
+                                        <Image
+                                            src={friend.photoURL ? friend.photoURL : placeholderImage}
+                                            width={'56px'}
+                                            fluid
+                                        />
+                                    </Col>
+                                    <Col
+                                        className="py-0 d-flex flex-column justify-content-center"
+                                        xs={'auto'}
+                                    >
+                                        <p className="m-0">
+                                            <strong>{friend.displayName ? friend.displayName : friend.email}</strong>
+                                        </p>
+                                        <p className="m-0 text-secondary">
+                                            {friend.email}
+
+                                        </p>
+                                    </Col>
+                                </Row>
+                            </ListGroupItem>
                         )
                     })
                     : loading
                         ? <p>Loading...</p>
                         : <p>You do not have any friends 😞</p>
                 }
-            </div>
+            </ListGroup>
         </Container>
     )
 }

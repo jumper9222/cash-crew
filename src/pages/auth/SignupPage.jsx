@@ -78,7 +78,7 @@ export default function SignupPage() {
 
     return (
         <Container
-            className="pt-5"
+            className="pt-5 bg-light"
             style={{
                 height: "calc(100vh - 58px)"
             }}

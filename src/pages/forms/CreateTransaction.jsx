@@ -85,7 +85,6 @@ export default function CreateTransaction({ show, onHide }) {
     // }, [settings])
 
     useEffect(() => {
-        console.log('split type ref useeffect: ', splitType)
         if (splitType === "Equally") {
             divideAmountsEqually();
         }

@@ -1,4 +1,4 @@
-import { Button, Col, Image, Navbar, NavDropdown, Row } from "react-bootstrap";
+import { Button, Col, Container, Image, Navbar, NavDropdown, Row } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,69 +20,63 @@ export default function NavigationBar() {
     return (
         <>
             <Navbar
-                className="d-flex justify-content-between"
-                style={{ background: '#f2f0e4', position: "sticky", top: "0", zIndex: "1000" }}
+                bg="navbars"
+                className="d-flex justify-content-between position-sticky sticky-top"
             >
-                <Navbar.Brand
-                    className="ms-3"
-                    href={currentUser?.uid ? '/dashboard' : '/'}
+                <Container
+                    className="m-0"
                 >
-                    <div className="d-flex position-relative">
-                        <Image src={cashcrewLogo} height='32px' width='32px' className="me-1" />
-                        <div className="position-absolute" style={{ left: '38px', top: '1px', fontWeight: '500', color: '#282740', fontSize: '24px' }}>Cashcrew</div>
-                    </div>
-                </Navbar.Brand>
-                {currentUser?.uid ?
-                    <NavDropdown
-                        className="me-4"
-                        title={
-                            <span>
-                                <Image
-                                    style={{ width: "34px", height: '34px', marginRight: "9px" }}
-                                    src={currentUser?.photoURL || placeHolderProfilePic}
-                                    roundedCircle
-                                />
-                                {currentUser?.displayName || currentUser.email}
-                            </span>
-                        }>
-                        <NavDropdown.Item href="/profile">
-                            Profile
-                        </NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item
-                            onClick={handleLogout}
-                        >
-                            Logout
-                        </NavDropdown.Item>
-                    </NavDropdown>
-                    : <div className="me-4 d-flex gap-2">
-                        <Button
-                            style={{
-                                background: "#bdb275",
-                                border: "#b4a864"
-                            }}
-                            onClick={() => navigate('/login')}
-                        >
-                            Login
-                        </Button>
-                        <Button
-                            style={{
-                                background: "#bdb275",
-                                border: "#b4a864"
-                            }}
-                            onClick={() => navigate('/signup')}
-                        >
-                            Signup
-                        </Button>
-                    </div>
-                }
+                    <Navbar.Brand
+                        className="ms-3"
+                        href={currentUser?.uid ? '/dashboard' : '/'}
+                    >
+                        <div className="d-flex position-relative">
+                            <Image src={cashcrewLogo} height='32px' width='32px' className="me-1" />
+                            <div className="position-absolute" style={{ left: '38px', top: '1px', fontWeight: '500', fontSize: '24px' }}>Cashcrew</div>
+                        </div>
+                    </Navbar.Brand>
+                    {currentUser?.uid ?
+                        <NavDropdown
+                            className="pe-4"
+                            align='end'
+                            title={
+                                <span>
+                                    <Image
+                                        style={{ width: "34px", height: '34px', marginRight: "9px" }}
+                                        src={currentUser?.photoURL || placeHolderProfilePic}
+                                        roundedCircle
+                                    />
+                                    <span className="d-none d-sm-inline">{currentUser?.displayName || currentUser.email}</span>
+                                </span>
+                            }>
+                            <NavDropdown.Item href="/profile">
+                                Profile
+                            </NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item
+                                onClick={handleLogout}
+                            >
+                                Logout
+                            </NavDropdown.Item>
+                        </NavDropdown>
+                        : <div className="me-4 d-flex gap-2">
+                            <Button
+                                onClick={() => navigate('/login')}
+                            >
+                                Login
+                            </Button>
+                            <Button
+                                onClick={() => navigate('/signup')}
+                            >
+                                Signup
+                            </Button>
+                        </div>
+                    }
+                </Container>
             </Navbar >
             <Outlet />
             <div
-                className="p-5"
-                style={{
-                    backgroundColor: '#f2f0e4',
-                }}
+                className="p-5 bg-navbars"
             >
                 <Row>
                     <Col sm={9} className="d-flex align-items-center">

@@ -1,7 +1,185 @@
-.transaction-row-card {
-    background-color: "#f5f5f5";
+:root,
+[data-bs-theme=light] {
+    --bs-body-font-size: 0.95rem;
+    --bs-body-color: hsl(50, 40%, 40%);
+    --bs-body-bg: hsl(50, 40%, 90%);
 }
 
-.transaction-row-card:hover {
-    background-color: "#f5f5f5";
+html,
+body {
+    overflow-x: hidden;
+}
+
+.custom-modal .modal-content {
+    box-shadow: 0px 0px 64px rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary {
+    background-color: hsl(50, 40%, 65%);
+    border-color: hsl(50, 40%, 65%);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+
+.btn-primary:active {
+    background-color: hsl(50, 40%, 50%) !important;
+    border-color: hsl(50, 40%, 50%) !important;
+}
+
+.btn-light,
+.btn-secondary {
+    background-color: hsl(50, 40%, 83%);
+    border-color: hsl(50, 40%, 83%);
+    color: hsl(50, 40%, 40%)
+}
+
+.btn-light:hover,
+.btn-secondary:hover,
+.btn-secondary:focus,
+.toggle-btn:hover {
+    background-color: hsl(50, 40%, 70%) !important;
+    border-color: hsl(50, 40%, 70%) !important;
+    color: rgb(252, 251, 248) !important;
+}
+
+.btn-secondary:active,
+.btn-light:active,
+.btn-check:checked+.btn-light {
+    background-color: hsl(50, 40%, 60%) !important;
+    border-color: hsl(50, 40%, 60%) !important;
+    color: hsl(50, 40%, 98%) !important;
+}
+
+.btn.disabled,
+.btn-primary:disabled,
+.btn-light:disabled {
+    background-color: hsl(50, 40%, 85%) !important;
+    border-color: hsl(50, 40%, 85%) !important;
+    color: hsl(50, 40%, 60%) !important;
+}
+
+.btn-danger {
+    background-color: hsl(0, 35%, 60%);
+    border-color: hsl(0, 35%, 60%);
+    color: white;
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active {
+    background-color: hsl(0, 35%, 50%);
+    border-color: hsl(0, 35%, 50%);
+}
+
+.bg-navbars,
+.modal-header,
+.card-header,
+.card-footer {
+    background-color: hsl(50, 40%, 90%);
+}
+
+.card,
+.list-group-item,
+.dropdown-menu,
+.dropdown-divider,
+.modal-body,
+.modal-footer,
+.form-control,
+.form-control:focus,
+.form-select {
+    border-color: hsl(50, 40%, 75%);
+    background-color: hsl(50, 40%, 98%);
+    transition: background-color 0.3s ease !important;
+}
+
+.list-group-item:hover,
+.dropdown-item:hover,
+.dropdown-item:active {
+    background-color: hsl(50, 40%, 93%);
+    color: hsl(50, 40%, 40%);
+    cursor: pointer
+}
+
+.dropdown:hover {
+    color: hsl(50, 40%, 30%) !important;
+}
+
+.navbar-brand {
+    color: hsl(50, 40%, 40%);
+}
+
+.navbar-brand:hover {
+    color: hsl(50, 40%, 33%);
+}
+
+.text-secondary,
+.form-control::placeholder {
+    color: hsl(50, 40%, 60%) !important;
+}
+
+.badge.bg-secondary {
+    background-color: hsl(50, 40%, 60%) !important;
+}
+
+.col.rounded-window {
+    border-radius: '15px' !important;
+    border: black, !important;
+    background-color: black !important
+}
+
+.bg-light {
+    background-color: hsl(50, 40%, 98%) !important
+}
+
+.container {
+    max-width: 100vw !important;
+    padding: 0;
+}
+
+/* Pill-Shaped Scrollbar */
+/* Container with scrollbar */
+.custom-scrollbar {
+    overflow-y: auto;
+    height: calc(100vh - 70px);
+}
+
+@media (max-width: 767.98px) {
+
+    /* Bootstrap 'md' breakpoint */
+    .custom-scrollbar {
+        height: calc(100vh - 70px - 54px);
+    }
+}
+
+/* Hide scrollbar initially */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    padding-right: 2px;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* Make scrollbar track have a width of 10px */
+.custom-scrollbar::-webkit-scrollbar-track {
+    display: none;
+}
+
+/* Make scrollbar thumb smaller by 1px on each side of the track */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsla(50, 40%, 70%, 0.25);
+    padding-right: 2px;
+    border-radius: 10px;
+}
+
+/* Hover effect to show scrollbar */
+/* Thumb on hover */
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background: hsla(50, 40%, 70%, 0.5);
+    transition: all, 0.3s
+}
+
+/* Fade scrollbar after 2 seconds of no hover */
+.custom-scrollbar:not(:hover)::-webkit-scrollbar {
+    background: hsla(50, 40%, 70%, 0);
+    transition: opacity 2s ease-out;
 }
