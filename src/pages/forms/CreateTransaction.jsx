@@ -78,12 +78,6 @@ export default function CreateTransaction({ show, onHide }) {
         })
     }, [])
 
-    // useEffect(() => {
-    //     if (settings) {
-    //         setCurrency(settings.defaultCurrency.toUpperCase());
-    //     }
-    // }, [settings])
-
     useEffect(() => {
         if (splitType === "Equally") {
             divideAmountsEqually();
@@ -216,7 +210,7 @@ export default function CreateTransaction({ show, onHide }) {
                 setDescription('');
                 setDate('');
                 setTotalAmount(0.00);
-                setCurrency('');
+                setCurrency(settings.defaultCurrency.toUpperCase());
                 setCategory('');
                 setImage(null);
                 setThumbnail(null);

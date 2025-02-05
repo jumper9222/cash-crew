@@ -21,13 +21,13 @@ export default function LandingPage() {
     return (
         <div>
             <Container
-                className="d-flex flex-column justify-content-center px-5 bg-light"
+                className="d-flex flex-column justify-content-lg-center px-3 px-md-5 pt-5 bg-light"
                 style={{
                     height: "calc(100vh - 58px)"
                 }}
             >
-                <Row className="">
-                    <Col className="d-flex flex-column align-items-start justify-content-center" md={5} lg={4}>
+                <Row>
+                    <Col className="d-flex flex-column align-items-start align-items-lg-end justify-content-center" md={5} lg={4}>
                         <div>
                             <h1>Cashcrew™</h1>
                             <p className="me-5">Your all-in-one PERSONAL and SHARED* expense tracker!</p>
@@ -49,8 +49,8 @@ export default function LandingPage() {
                             >* Feature coming soon</p>
                         </div>
                     </Col>
-                    <Col>
-                        <Image className='mt-5' src={image01} fluid md={7} lg={8} />
+                    <Col className="d-flex justify-content-center align-items-center">
+                        <Image className='mt-5 mx-auto' src={image01} fluid />
                     </Col>
                 </Row>
             </Container>

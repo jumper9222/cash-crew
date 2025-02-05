@@ -54,7 +54,7 @@ export default function SignupPage() {
         e.preventDefault();
         createUserWithEmailAndPassword(auth, email, password)
             .then((result) => dispatch(setUserDoc(result.user)))
-            .then(() => navigate('/personal'))
+            .then(() => navigate('/dashboard'))
             .catch((error) => {
                 console.error('Error signing up: ', error.message)
             })

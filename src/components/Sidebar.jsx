@@ -16,12 +16,7 @@ export default function Sidebar() {
     return (
         <div>
             <Row
-                className="d-md-none p-2 ps-3 mb-1"
-                style={{
-                    overflow: 'auto',
-                    position: 'sticky',
-                    bottom: '50px'
-                }}
+                className="d-md-none p-2 ps-3 mb-1 no-scrollbar"
             >
                 <ButtonGroup className="gap-2">
                     <SidebarButton
@@ -47,7 +42,11 @@ export default function Sidebar() {
                 </ButtonGroup>
             </Row>
             <Row
-                className="me-sm-0 mx-1"
+                className="me-sm-0"
+                style={{
+                    marginLeft: '1px',
+                    marginRight: "1px"
+                }}
             >
                 <Col
                     style={{

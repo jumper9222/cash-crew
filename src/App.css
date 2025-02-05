@@ -142,6 +142,7 @@ body {
 .custom-scrollbar {
     overflow-y: auto;
     height: calc(100vh - 70px);
+    scrollbar-gutter: stable both-edges;
 }
 
 @media (max-width: 767.98px) {
@@ -154,9 +155,7 @@ body {
 
 /* Hide scrollbar initially */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 10px;
-    padding-right: 2px;
-    transition: opacity 0.5s ease-in-out;
+    width: 6px;
 }
 
 /* Make scrollbar track have a width of 10px */
@@ -167,7 +166,6 @@ body {
 /* Make scrollbar thumb smaller by 1px on each side of the track */
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background: hsla(50, 40%, 70%, 0.25);
-    padding-right: 2px;
     border-radius: 10px;
 }
 
@@ -175,11 +173,14 @@ body {
 /* Thumb on hover */
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
     background: hsla(50, 40%, 70%, 0.5);
-    transition: all, 0.3s
+    transition: background 0.3s ease-in-out
 }
 
-/* Fade scrollbar after 2 seconds of no hover */
-.custom-scrollbar:not(:hover)::-webkit-scrollbar {
-    background: hsla(50, 40%, 70%, 0);
-    transition: opacity 2s ease-out;
+.no-scrollbar {
+    overflow-x: auto;
+    position: sticky;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }

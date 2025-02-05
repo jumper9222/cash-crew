@@ -54,6 +54,7 @@ export default function FriendsPage() {
                                             src={friend.photoURL ? friend.photoURL : placeholderImage}
                                             width={'56px'}
                                             fluid
+                                            roundedCircle
                                         />
                                     </Col>
                                     <Col
