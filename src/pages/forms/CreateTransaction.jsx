@@ -1,32 +1,52 @@
 import { DateTime } from "luxon";
 import { useEffect, useRef, useState } from "react";
-import { Badge, Button, Form, Image, InputGroup, Modal, Spinner } from "react-bootstrap";
-import SplitRow from "../../components/SplitRow";
+import { Badge, Button, Col, Form, Image, InputGroup, Modal, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { postTransaction } from "../../features/transactions/transactionsAsyncThunks";
 import axios from "axios";
+import { postTransaction } from "../../features/transactions/transactionsAsyncThunks";
+import SplitRow from "../../components/SplitRow";
 import ImagePreview from "../../components/ImagePreview";
+import { categoriesArray } from "../../features/current-user/currentUserSelector";
+import CreatableSelect from "react-select/creatable";
+import Select from "react-select";
 
 export default function CreateTransaction({ show, onHide }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { uid, email, settings } = useSelector(state => state.currentUser)
+    const categories = useSelector(categoriesArray)
     const friendEmails = useSelector(state => state.friends.friendEmails)
     const friends = useSelector(state => state.friends.friends)
     const loading = useSelector((state) => state.transactions.loading.transactions)
+    const customStyles = {
+        option: (provided, state) => ({
+            ...provided,
+            fontWeight: state.data.parentCategoryID === null ? "bold" : "normal",
+            backgroundColor: state.isSelected
+                ? "#007bff"
+                : state.isFocused
+                    ? "#f0f0f0"
+                    : state.data.parentCategoryID === null
+                        ? "#f8f9fa" // Light background for parent categories
+                        : "#ffffff",
+            color: state.isSelected ? "#fff" : "#333",
+            paddingLeft: state.data.parentCategoryID ? 20 : 10, // Indent child categories
 
+        }),
+    }
 
     //form states
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const currentDate = DateTime.local().toFormat('yyyy-MM-dd');
     const [date, setDate] = useState(currentDate);
-    const [totalAmount, setTotalAmount] = useState(0);
-    const [currency, setCurrency] = useState(settings?.defaultCurrency ? settings?.defaultCurrency.toUpperCase() : '');
+    const [totalAmount, setTotalAmount] = useState(0.00);
+    const [currency, setCurrency] = useState('');
     const [category, setCategory] = useState('');
     const [isSplit, setIsSplit] = useState(false);
-    const [currencies, setCurrencies] = useState({})
+    //Fetched currencies for currency select
+    const [currencies, setCurrencies] = useState([]);
     const [image, setImage] = useState(null)
     const [thumbnail, setThumbnail] = useState(null)
     const fileInputRef = useRef(null)
@@ -55,7 +75,13 @@ export default function CreateTransaction({ show, onHide }) {
 
     const fetchCurrencies = async () => {
         const currencies = await axios.get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.min.json')
-        return currencies.data
+        const currencyArray = Object.entries(currencies.data).filter(([_, value]) => {
+            return value
+        }).map(([key, value]) => {
+            return { value: key.toUpperCase(), label: key.toUpperCase() + ' - ' + value }
+        })
+        console.log(currencyArray)
+        return currencyArray
     }
 
     //Define split modified history function
@@ -73,9 +99,11 @@ export default function CreateTransaction({ show, onHide }) {
     }
 
     useEffect(() => {
-        fetchCurrencies().then((currencies) => {
-            setCurrencies(currencies)
-        })
+        fetchCurrencies()
+            .then((currencies) => {
+                setCurrencies(currencies);
+                setCurrency(currencies.find(currency => currency.value === settings.defaultCurrency.toUpperCase()));
+            })
     }, [])
 
     useEffect(() => {
@@ -196,7 +224,7 @@ export default function CreateTransaction({ show, onHide }) {
             description,
             date,
             totalAmount,
-            currency,
+            currency: currency.value.toUpperCase(),
             category,
             isSplit,
             splits: isSplit ? splits : [],
@@ -258,44 +286,53 @@ export default function CreateTransaction({ show, onHide }) {
                         </Form.Group>
                         <Form.Label>Amount</Form.Label>
                         <InputGroup className="mb-3">
-                            <Form.Control
-                                type="number"
-                                step="0.01"
-                                value={totalAmount}
-                                onChange={e => setTotalAmount(e.target.value)}
-                                onBlur={() => {
-                                    if (totalAmount) {
-                                        setTotalAmount(parseFloat(totalAmount).toFixed(2))
-                                    }
-                                }}
-                                placeholder="Enter amount"
-                                required
-                            />
-                            <Form.Select
-                                value={currency}
-                                onChange={e => setCurrency(e.target.value)}
-                                required
-                            >
-                                <option>Select currency</option>
-                                {Object.entries(currencies).map(([key, value]) => {
-                                    return (
-                                        <option key={key} value={key.toUpperCase()}>{key.toUpperCase()} - {value}</option>
-                                    )
-                                })}
-                            </Form.Select>
+                            <Col xs={7}>
+                                <Form.Control
+                                    type="number"
+                                    step="0.01"
+                                    value={totalAmount}
+                                    onChange={e => setTotalAmount(e.target.value)}
+                                    onBlur={() => {
+                                        if (totalAmount) {
+                                            setTotalAmount(parseFloat(totalAmount).toFixed(2))
+                                        }
+                                    }}
+                                    placeholder="Enter amount"
+                                    style={{
+                                        borderTopRightRadius: '0px',
+                                        borderBottomRightRadius: '0px'
+                                    }}
+                                    required
+                                />
+                            </Col>
+                            <Col xs={5}>
+                                <Select
+                                    options={currencies}
+                                    value={currency}
+                                    onChange={setCurrency}
+                                    styles={{
+                                        control: (base) => ({
+                                            ...base,
+                                            backgroundColor: '#fcfbf8', // Example background color
+                                            borderRadius: '8px', // Default rounded corners
+                                            borderTopLeftRadius: '0px', // Remove top-left corner roundness
+                                            borderBottomLeftRadius: '0px', // Remove bottom-left corner roundness
+                                            borderColor: '#d9d0a6'
+                                        }),
+                                    }}
+                                    placeholder='Currency...'
+                                />
+                            </Col>
                         </InputGroup>
                         <Form.Group className="mb-3">
                             <Form.Label>Category</Form.Label>
-                            <Form.Select
+                            <CreatableSelect
+                                options={categories}
                                 value={category}
-                                onChange={e => setCategory(e.target.value)}
-                                required
-                            >
-                                <option>Select a Category</option>
-                                {settings?.categories && settings?.categories.map((category, i) => (
-                                    <option key={i} value={category}>{category}</option>
-                                ))}
-                            </Form.Select>
+                                onChange={setCategory}
+                                styles={customStyles}
+                                placeholder='Select a category'
+                            />
                         </Form.Group>
                         {thumbnail && <Image className="mb-3" width='50px' src={thumbnail} onClick={() => setShowModal(true)} fluid />}
                         <Form.Group className="mb-2">
@@ -318,7 +355,7 @@ export default function CreateTransaction({ show, onHide }) {
                             />
                             <Button onClick={handleAddImage}>Add Image</Button>
                         </Form.Group>
-                        {!isSplit && <Button className="me-2" onClick={handleAddSplit} variant="light" disabled>Split Transaction <Badge bg='secondary'>Coming Soon</Badge></Button>}
+                        {!isSplit && <Button className="me-2" onClick={handleAddSplit} variant="light">Split Transaction <Badge bg='secondary'>Coming Soon</Badge></Button>}
 
                         {isSplit &&
                             <>

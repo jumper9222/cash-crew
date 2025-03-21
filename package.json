@@ -24,6 +24,7 @@
     "react-google-charts": "^5.2.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.0.2",
+    "react-select": "^5.10.0",
     "redux-persist": "^6.0.0",
     "uuid": "^11.0.5",
     "vitest": "^2.1.8"

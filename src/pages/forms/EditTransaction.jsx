@@ -149,8 +149,8 @@ export default function EditTransaction({ show, onHide, transactionObject }) {
                             required
                         >
                             <option>Select a Category</option>
-                            {settings.categories.map((category, i) => (
-                                <option key={i} value={category}>{category}</option>
+                            {settings?.categories && Object.entries(settings?.categories).map(([id, categoryObj], i) => (
+                                <option key={id} value={id}>{categoryObj.name}</option>
                             ))}
                         </Form.Select>
                     </Form.Group>
