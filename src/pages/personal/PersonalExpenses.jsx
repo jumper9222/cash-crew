@@ -12,9 +12,10 @@ export default function PersonalExpenses() {
     const params = useParams();
     const [isLgScreen, setIsLgScreen] = useState(window.innerWidth >= 992)
 
-    const { uid } = useSelector(state => state.currentUser)
-    const groupedTransactions = useSelector(groupPersonalTransactionsByDate(uid))
+    const { uid } = useSelector(state => state.currentUser);
+    const groupedTransactions = useSelector(groupPersonalTransactionsByDate(uid));
     const loading = useSelector((state) => state.transactions.loading.transactions);
+    const categories = useSelector((state) => state.currentUser.settings.categories)
 
     useEffect(() => {
         const handleResize = () => {
@@ -60,6 +61,7 @@ export default function PersonalExpenses() {
                                         <ListGroup className="mb-3">
                                             {transactions.map((transaction) => (
                                                 <TransactionRow
+                                                    category={categories[transaction.category] || {}}
                                                     key={transaction.id}
                                                     transaction={transaction}
                                                     onClick={() => handleOpenTransaction(transaction.id)}

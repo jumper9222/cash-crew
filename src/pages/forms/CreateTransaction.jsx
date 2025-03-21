@@ -225,7 +225,7 @@ export default function CreateTransaction({ show, onHide }) {
             date,
             totalAmount,
             currency: currency.value.toUpperCase(),
-            category,
+            category: category.value,
             isSplit,
             splits: isSplit ? splits : [],
             image

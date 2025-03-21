@@ -25,8 +25,9 @@ export default function TransactionPage() {
     const { uid: user_id, displayName, settings } = currentUser
 
     //Selectors
-    const { transaction, splits } = useSelector(fetchTransactionFromId(transaction_id))
+    const { transaction, splits } = useSelector(fetchTransactionFromId(transaction_id));
     const splitEntries = Object.entries(splits);
+    const categories = useSelector(state => state.currentUser.settings.categories);
 
     const loading = useSelector(state => state.transactions.loading.transactions)
     console.log('transaction page: ', transaction, splits)
@@ -100,10 +101,11 @@ export default function TransactionPage() {
                 {!loading ?
                     <>
                         <h4 className="mb-0">
+                            {categories[transaction?.category]?.emoji || '📃'}
                             {transaction?.title + ' ' || null}
                             {transaction?.is_split && <i className="bi bi-people-fill fs-6 text-secondary"></i>}
                         </h4>
-                        <p className="mb-0 text-secondary">{transaction?.category || null}</p>
+                        <p className="mb-0 text-secondary">{categories[transaction?.category]?.name || transaction?.category || null}</p>
                         <p className="mb-3">{formattedDate}</p>
                         <p className="mb-0 text-secondary">{transaction?.is_split ? 'Your share' : 'Total amount'}</p>
                         <h5 className="mb-3">

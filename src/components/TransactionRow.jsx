@@ -1,12 +1,13 @@
 import { Card, Col, ListGroup, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-export default function TransactionRow({ transaction, onClick }) {
+export default function TransactionRow({ transaction, onClick, category }) {
     const { settings } = useSelector(state => state.currentUser)
 
     return (
         <ListGroup.Item className="pe-0" onClick={onClick}>
             <Row className="m-0 p-0">
+                <Col xs='auto' className="text-start ps-0">{category?.emoji || '📃'}</Col>
                 <Col
                     className="m-0 p-0"
                 >
