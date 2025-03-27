@@ -105,17 +105,44 @@ export const calculateTotalPersonalExpenseByMonth = (user_id, month, year) => cr
 export const calculateTotalPersonalExpenseByCategoryByMonth = (user_id, month, year) => createSelector(
     [getTransactions, getSplits, getSettings],
     (transactions, splits, settings) => {
+        //Get the categories object from currentUser slice
+        const categories = settings.categories;
+
+        //filter out the transactions for the current month and year
         const transactionsThisMonth = Object.values(transactions).filter((transaction) => {
             const date = DateTime.fromISO(transaction.date)
+            //Returns transactions from the current month and year with the default currency only
             return date.month === month && date.year === year && transaction.currency === settings.defaultCurrency
         })
+
+        //Initialize an empty object to store the totals for each category
         let totals = {};
         let splitTransactionIds = [];
-        transactionsThisMonth.map(({ is_split, total_amount, category, id }) => {
-            if (!is_split) {
-                return totals[category] = !totals[category] ? parseFloat(total_amount) : totals[category] + parseFloat(total_amount)
+
+        //Iterate through the transactions for the current month and year, 
+        transactionsThisMonth.forEach(({ is_split, total_amount, category, id }) => {
+            //If main category, adds total to main category and creates a subcategory of the main category
+            if (!is_split && !categories[category].parentCategory) {
+                totals[category] = totals[category] || { total: 0, subCategory: {} };
+                totals[category].total = !totals[category].total ? parseFloat(total_amount) : totals[category].total + parseFloat(total_amount);
+                totals[category].subCategory[category] = !totals[category].subCategory[category] ? parseFloat(total_amount) : totals[category].subCategory[category] + parseFloat(total_amount)
+            } else if (!is_split && categories[category].parentCategory) { //If subcategory, adds total to the main category and subcategory
+                //Get the parent category ID
+                const parentCategoryID = categories[category].parentCategoryID;
+
+                //If the parent category does not exist in the totals object, create it
+                totals[parentCategoryID] = totals[parentCategoryID] || { total: 0, subCategory: {} };
+
+                //Add the total amount to the parent category
+                totals[parentCategoryID].total += parseFloat(total_amount);
+
+                //If the subcategory does not exist in the parent category, create it
+                totals[parentCategoryID].subCategory[category] = totals[parentCategoryID].subCategory[category] || 0;
+
+                //Add the total amount to the subcategory
+                totals[parentCategoryID].subCategory[category] += parseFloat(total_amount);
             } else {
-                return splitTransactionIds.push(id)
+                splitTransactionIds.push(id)
             }
         });
 

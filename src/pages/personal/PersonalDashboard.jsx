@@ -1,4 +1,4 @@
-import { Card, Col, Container, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { Accordion, Card, Col, Container, ListGroup, ListGroupItem, Row } from "react-bootstrap";
 import {
     calculateTotalPersonalExpenseByCategoryByMonth,
     calculateTotalPersonalExpenseByMonth
@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { DateTime } from "luxon";
 import PersonalAndSharedTabs from "../../components/PersonalAndSharedTabs";
 import Chart from "react-google-charts";
+import CategoriesAccordion from "../../components/CategoriesAccordion";
 
 export default function PersonalDashboard() {
     const user_id = useSelector(state => state.currentUser.uid)
@@ -14,8 +15,15 @@ export default function PersonalDashboard() {
 
     const totalPersonalExpense = useSelector(calculateTotalPersonalExpenseByMonth(user_id, date.month, date.year)).toFixed(2)
     const totalPersonalExpenseByCategory = useSelector(calculateTotalPersonalExpenseByCategoryByMonth(user_id, date.month, date.year))
+    const categories = useSelector(state => state.currentUser.settings.categories)
 
-    const chartData = [["Category", "Amount"], ...Object.entries(totalPersonalExpenseByCategory)]
+    const chartData = [["Category", "Amount"],
+    ...Object.values(totalPersonalExpenseByCategory).reduce((acc, category) => {
+        return [...acc, ...Object.entries(category.subCategory).map(([id, amount]) => {
+            return [categories[id].name, amount]
+        })]
+    }, [])
+    ]
     const chartOptions = {
         colors: [
             "#c17070", "#c19970", "#c1c170", "#99c170", "#70c170", "#70c199",
@@ -39,6 +47,7 @@ export default function PersonalDashboard() {
 
     return (
         <Container>
+
             <h3 className="mb-3">Personal Dashboard</h3>
             <PersonalAndSharedTabs currentPage='/dashboard' />
             <Row>
@@ -56,24 +65,7 @@ export default function PersonalDashboard() {
                             <Card.Text>Total Expense By Category*</Card.Text>
                         </Card.Header>
                         <Card.Body>
-                            <ListGroup>
-                                {Object.entries(totalPersonalExpenseByCategory).length > 0
-                                    ? Object.entries(totalPersonalExpenseByCategory).map(([key, value]) => {
-                                        return (
-                                            <ListGroup.Item key={key}>
-                                                <Row>
-                                                    <Col >{key}</Col>
-                                                    <Col xs={'auto'} className="text-end fw-semibold m-0 p-0 ms-3">{value.toFixed(2)}</Col>
-                                                    <Col xs={'auto'} className='text-end'>MYR</Col>
-                                                </Row>
-                                            </ListGroup.Item>
-                                        )
-                                    })
-                                    : <ListGroupItem>
-                                        No transactions this month
-                                    </ListGroupItem>
-                                }
-                            </ListGroup>
+                            <CategoriesAccordion totals={totalPersonalExpenseByCategory} categories={categories} />
                         </Card.Body>
                     </Card>
                 </Col>

@@ -2,7 +2,6 @@ import { DateTime } from "luxon";
 import { useEffect, useRef, useState } from "react";
 import { Badge, Button, Col, Form, Image, InputGroup, Modal, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { postTransaction } from "../../features/transactions/transactionsAsyncThunks";
 import SplitRow from "../../components/SplitRow";
@@ -12,13 +11,14 @@ import CreatableSelect from "react-select/creatable";
 import Select from "react-select";
 
 export default function CreateTransaction({ show, onHide }) {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { uid, email, settings } = useSelector(state => state.currentUser)
     const categories = useSelector(categoriesArray)
     const friendEmails = useSelector(state => state.friends.friendEmails)
     const friends = useSelector(state => state.friends.friends)
     const loading = useSelector((state) => state.transactions.loading.transactions)
+
+    //React select component styling
     const customStyles = {
         option: (provided, state) => ({
             ...provided,
@@ -61,6 +61,7 @@ export default function CreateTransaction({ show, onHide }) {
     const [focusIndex, setFocusIndex] = useState(0);
     const [splitsAreValid, setSplitsAreValid] = useState(true);
 
+    //Modal state for image preview
     const [showModal, setShowModal] = useState(false)
 
     //split use effect
@@ -332,6 +333,7 @@ export default function CreateTransaction({ show, onHide }) {
                                 onChange={setCategory}
                                 styles={customStyles}
                                 placeholder='Select a category'
+                                required
                             />
                         </Form.Group>
                         {thumbnail && <Image className="mb-3" width='50px' src={thumbnail} onClick={() => setShowModal(true)} fluid />}
