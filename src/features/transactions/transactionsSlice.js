@@ -8,7 +8,7 @@ import {
     postTransaction,
     // updateComment,
     updateTransaction
-} from "./transactionsAsyncThunks";
+} from "./transactionsActions";
 
 const transactionsSlice = createSlice({
     name: "transactions",

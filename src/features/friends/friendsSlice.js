@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addFriend, fetchFriendsByEmail } from "./friendsAsyncThunks";
+import { addFriend, fetchFriendsByEmail } from "./friendsActions";
 import { getCurrentUserFromDB } from "../current-user/currentUserActions";
 
 const friendsSlice = createSlice({

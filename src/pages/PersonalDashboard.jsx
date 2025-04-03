@@ -1,13 +1,13 @@
-import { Accordion, Card, Col, Container, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import {
     calculateTotalPersonalExpenseByCategoryByMonth,
     calculateTotalPersonalExpenseByMonth
-} from "../../features/transactions/transactionsSelectors";
+} from "../features/transactions/transactionsSelectors";
 import { useSelector } from "react-redux";
 import { DateTime } from "luxon";
-import PersonalAndSharedTabs from "../../components/PersonalAndSharedTabs";
+import PersonalAndSharedTabs from "../components/PersonalAndSharedTabs";
 import Chart from "react-google-charts";
-import CategoriesAccordion from "../../components/CategoriesAccordion";
+import CategoriesAccordion from "../components/CategoriesAccordion";
 
 export default function PersonalDashboard() {
     const user_id = useSelector(state => state.currentUser.uid)

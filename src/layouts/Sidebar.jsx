@@ -1,17 +1,13 @@
-import React from "react";
-import { useState } from "react";
+import { useContext } from "react";
 import { Badge, Button, ButtonGroup, Col, Row, ToggleButton } from "react-bootstrap";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import CreateTransaction from "../pages/forms/CreateTransaction";
+import MainTransactionForm from "../pages/forms/MainTransactionForm";
+import { TransactionFormContext } from "../features/transactions/TransactionFormContextProvider";
 
 export default function Sidebar() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [show, setShow] = useState('');
-
-    const onHide = () => {
-        setShow('')
-    }
+    const { showNewTransModal } = useContext(TransactionFormContext)
 
     return (
         <div>
@@ -62,7 +58,7 @@ export default function Sidebar() {
                         className='mb-5 rounded-pill'
                         variant="light"
                         size="lg"
-                        onClick={() => setShow('add-transaction')}
+                        onClick={showNewTransModal}
                     >
                         <i className="bi bi-plus-lg"></i> Create
                     </Button>
@@ -111,8 +107,8 @@ export default function Sidebar() {
                     </div>
                 </Col>
             </Row>
-            <CreateTransaction show={show} onHide={onHide} />
-        </div>
+            <MainTransactionForm />
+        </div >
     )
 }
 

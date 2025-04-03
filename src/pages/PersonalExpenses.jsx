@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { DateTime } from "luxon";
-import TransactionRow from "../../components/TransactionRow";
-import PersonalAndSharedTabs from "../../components/PersonalAndSharedTabs";
-import { groupPersonalTransactionsByDate } from "../../features/transactions/transactionsSelectors";
+import TransactionRow from "../components/TransactionRow";
+import PersonalAndSharedTabs from "../components/PersonalAndSharedTabs";
+import { groupPersonalTransactionsByDate } from "../features/transactions/transactionsSelectors";
 
 export default function PersonalExpenses() {
     const navigate = useNavigate();

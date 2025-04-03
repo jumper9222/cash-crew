@@ -1,20 +1,18 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useDispatch } from 'react-redux';
 import LandingPage from "./pages/auth/LandingPage";
-import NavigationBar from "./components/NavigationBar";
+import NavigationBar from "./layouts/NavigationBar";
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
-import Sidebar from "./components/Sidebar";
-import PersonalDashboard from "./pages/personal/PersonalDashboard";
-import PersonalExpenses from "./pages/personal/PersonalExpenses";
+import Sidebar from "./layouts/Sidebar";
+import PersonalDashboard from "./pages/PersonalDashboard";
+import PersonalExpenses from "./pages/PersonalExpenses";
 import TransactionPage from "./pages/TransactionPage";
-import FriendsPage from './pages/shared/FriendsPage';
+import FriendsPage from './pages/FriendsPage';
 import ProfilePage from './pages/ProfilePage';
 import RequireAuth from './components/RequireAuth';
+import TransactionFormContextProvider from "./features/transactions/TransactionFormContextProvider";
 
 export default function App() {
-  const dispatch = useDispatch();
-
   return (
     <BrowserRouter>
       <Routes>
@@ -23,7 +21,11 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route element={<RequireAuth />}>
-            <Route element={<Sidebar />}>
+            <Route element={
+              <TransactionFormContextProvider>
+                <Sidebar />
+              </TransactionFormContextProvider>
+            }>
               <Route path="/dashboard" element={<PersonalDashboard />} />
               <Route path="/dashboard/shared" element={<PersonalDashboard />} />
               <Route path="/expenses" element={<PersonalExpenses />} >

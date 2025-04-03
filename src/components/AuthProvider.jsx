@@ -1,8 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { useDispatch } from "react-redux";
-import { fetchTransactionsByUser } from "../features/transactions/transactionsAsyncThunks";
-import { fetchFriendsByEmail } from "../features/friends/friendsAsyncThunks";
+import { fetchTransactionsByUser } from "../features/transactions/transactionsActions";
+import { fetchFriendsByEmail } from "../features/friends/friendsActions";
 
 const AuthContext = createContext(null);
 

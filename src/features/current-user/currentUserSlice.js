@@ -74,35 +74,27 @@ const categories = {
     sh002: { name: "Clothes", type: "Need", emoji: "👕", parentCategory: "Shopping", parentCategoryID: "sh000" },
 }
 
+const initialState = {
+    displayName: '',
+    email: '',
+    phoneNumber: '',
+    photoURL: '',
+    uid: '',
+    birthday: '',
+    gender: '',
+    loading: false,
+    settings: {
+        defaultCurrency: 'MYR',
+        categories: categories
+    }
+}
+
 const currentUserSlice = createSlice({
     name: 'currentUser',
-    initialState: {
-        displayName: '',
-        email: '',
-        phoneNumber: '',
-        photoURL: '',
-        uid: '',
-        birthday: '',
-        gender: '',
-        loading: false,
-        settings: {
-            defaultCurrency: 'MYR',
-            categories: categories
-        }
-    },
+    initialState: initialState,
     reducers: {
         clearUser(state) {
-            state.displayName = '';
-            state.email = '';
-            state.phoneNumber = '';
-            state.photoURL = '';
-            state.uid = '';
-            state.birthday = '';
-            state.gender = '';
-            state.settings = {
-                defaultCurrency: 'MYR',
-                categories: categories
-            };
+            state = initialState;
         }
     },
     extraReducers: (builder) => {

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button, Container, InputGroup, Form, Row, Col, ListGroup, ListGroupItem, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { addFriend } from "../../features/friends/friendsAsyncThunks";
-import placeholderImage from "../../assets/undraw_profile-pic_fatv.svg";
+import { addFriend } from "../features/friends/friendsActions";
+import placeholderImage from "../assets/undraw_profile-pic_fatv.svg";
 
 export default function FriendsPage() {
     const dispatch = useDispatch();

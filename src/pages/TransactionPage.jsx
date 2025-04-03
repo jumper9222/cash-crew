@@ -2,17 +2,18 @@ import { Button, Card, Image, Modal, Placeholder, Row, Spinner, Table } from "re
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { DateTime } from "luxon";
-import { useEffect, useState } from "react";
-import { convertToDefaultCurrency, deleteTransaction } from "../features/transactions/transactionsAsyncThunks";
+import { useContext, useEffect, useState } from "react";
+import { convertToDefaultCurrency, deleteTransaction } from "../features/transactions/transactionsActions";
 import { fetchTransactionFromId } from "../features/transactions/transactionsSelectors";
-import EditTransaction from "./forms/EditTransaction";
 import { selectFriendDisplayNameById } from "../features/friends/friendsSelector";
 import ImagePreview from "../components/ImagePreview";
+import { TransactionFormContext } from "../features/transactions/TransactionFormContextProvider";
 
 export default function TransactionPage() {
     //Defining react router functions
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { showEditTransModal } = useContext(TransactionFormContext)
 
     //React states
     const [showModal, setShowModal] = useState('')
@@ -20,7 +21,6 @@ export default function TransactionPage() {
 
     //Params and Contexts
     const { transaction_id } = useParams();
-    console.log(transaction_id)
     const currentUser = useSelector(state => state.currentUser)
     const { uid: user_id, displayName, settings } = currentUser
 
@@ -30,7 +30,6 @@ export default function TransactionPage() {
     const categories = useSelector(state => state.currentUser.settings.categories);
 
     const loading = useSelector(state => state.transactions.loading.transactions)
-    console.log('transaction page: ', transaction, splits)
 
     const formattedDate = DateTime.fromISO(transaction?.date).toFormat('EEEE, dd MMMM yyyy')
 
@@ -81,9 +80,10 @@ export default function TransactionPage() {
                 <div className="ms-auto">
 
                     <Button
-                        onClick={() => setShowModal('edit-transaction')}
+                        onClick={showEditTransModal}
                         variant="secondary"
                         size="sm"
+                        disabled={loading}
                     >
                         <i className="bi bi-pencil"></i>
                     </Button>
@@ -180,10 +180,6 @@ export default function TransactionPage() {
                     <Button variant="danger" onClick={handleDelete} disabled={loading}>Delete {loading && <Spinner size="sm" />}</Button>
                 </Modal.Footer>
             </Modal>
-            {
-                !loading && transaction &&
-                <EditTransaction show={showModal} onHide={onHide} transactionObject={{ transaction, splits }} />
-            }
         </Card >
     )
 }
