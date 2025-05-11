@@ -178,3 +178,17 @@ export const groupPersonalTransactionsByDate = (user_id) => createSelector(
         return transactionsArray
     }
 )
+
+export const getLatestDateModified = createSelector(
+    [getTransactions],
+    (transactions) => {
+        const dates = Object.values(transactions).reduce((accu, transaction) => {
+            if (transaction.date_modified) {
+                accu.push(transaction.date_modified)
+            }
+            return accu
+        }, []);
+        const latestDate = dates.length > 0 ? new Date(Math.max(...dates.map(date => new Date(date)))).toISOString() : new Date(0).toISOString();
+        return latestDate
+    }
+)

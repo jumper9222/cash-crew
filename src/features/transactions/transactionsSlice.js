@@ -10,20 +10,26 @@ import {
     updateTransaction
 } from "./transactionsActions";
 
+const initialState = {
+    transactions: {},
+    transactionIds: [],
+    comments: {},
+    splits: {},
+    loading: {
+        transactions: false,
+        fetchingTransactions: false,
+        comments: false,
+    }
+}
+
 const transactionsSlice = createSlice({
     name: "transactions",
-    initialState: {
-        transactions: {},
-        transactionIds: [],
-        comments: {},
-        splits: {},
-        loading: {
-            transactions: false,
-            fetchingTransactions: false,
-            comments: false,
+    initialState: initialState,
+    reducers: {
+        clearTransactions(state) {
+            return state = initialState;
         }
     },
-    reducers: {},
     extraReducers: (builder) => {
         //Fetch transactions
         builder.addCase(fetchTransactionsByUser.pending, (state) => {
@@ -32,59 +38,67 @@ const transactionsSlice = createSlice({
         });
         builder.addCase(fetchTransactionsByUser.fulfilled, (state, action) => {
             const transactions = action.payload
-            console.log("Transactions fetched successfully")
+            console.log("Transactions fetched successfully", action.payload)
 
             //Set fetched transactions into transactions stated
-            state.transactions = transactions.reduce((acc, {
-                transaction_id,
-                title,
-                description,
-                date,
-                total_amount,
-                currency,
-                paid_by,
-                category,
-                is_split,
-                photo_url
-            }) => {
-                if (!acc[transaction_id]) {
-                    acc[transaction_id] = {
-                        id: transaction_id,
-                        title,
-                        description,
-                        date,
-                        total_amount,
-                        currency,
-                        paid_by,
-                        category,
-                        is_split,
-                        photo_url
+            state.transactions = {
+                ...state.transactions,
+                ...transactions.reduce((acc, {
+                    transaction_id,
+                    title,
+                    description,
+                    date,
+                    total_amount,
+                    currency,
+                    paid_by,
+                    category,
+                    date_modified,
+                    is_split,
+                    photo_url
+                }) => {
+                    if (!acc[transaction_id]) {
+                        acc[transaction_id] = {
+                            id: transaction_id,
+                            title,
+                            description,
+                            date,
+                            total_amount,
+                            currency,
+                            paid_by,
+                            category,
+                            date_modified,
+                            is_split,
+                            photo_url
+                        }
                     }
-                }
-                return acc
-            }, {});
+                    return acc
+                }, {})
+            };
 
             //Set fetched transactions into splits state
-            state.splits = transactions.reduce((acc, {
-                transaction_id,
-                split_id,
-                split_uid,
-                split_amount,
-                split_category,
-                is_split
-            }) => {
-                if (is_split) {
-                    if (!acc[transaction_id]) {
-                        acc[transaction_id] = {};
+            state.splits = {
+                ...state.splits,
+                ...transactions.reduce((acc, {
+                    transaction_id,
+                    split_id,
+                    split_uid,
+                    split_amount,
+                    split_category,
+                    is_split
+                }) => {
+                    if (is_split) {
+                        if (!acc[transaction_id]) {
+                            acc[transaction_id] = {};
+                        }
+                        acc[transaction_id][split_uid] = {
+                            id: split_id,
+                            split_amount,
+                            category: split_category,
+                        }
                     }
-                    acc[transaction_id][split_uid] = {
-                        id: split_id,
-                        split_amount,
-                        category: split_category,
-                    }
-                }
-                return acc
-            }, {})
+                    return acc
+                }, {})
+            }
             state.transactionIds = Object.values(state.transactions).sort((a, b) =>
                 DateTime.fromISO(b.date) - DateTime.fromISO(a.date)
             ).map((transaction) => {
@@ -239,4 +253,5 @@ const transactionsSlice = createSlice({
     }
 });
 
+export const { clearTransactions } = transactionsSlice.actions;
 export default transactionsSlice.reducer;

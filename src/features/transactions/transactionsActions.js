@@ -7,11 +7,12 @@ import { DateTime } from "luxon";
 
 
 const BASE_URL = 'https://cash-crew-api.vercel.app';
+// const BASE_URL = 'https://localhost:3001';
 
 export const fetchTransactionsByUser = createAsyncThunk(
     "transactions/fetchTransactionsByUser",
-    async (user_id) => {
-        const response = await axios.get(`${BASE_URL}/transactions/${user_id}`)
+    async ({ user_id, latestDateModified }) => {
+        const response = await axios.get(`${BASE_URL}/transactions/${user_id}`, { params: { latestDateModified } });
         return response.data;
     }
 );

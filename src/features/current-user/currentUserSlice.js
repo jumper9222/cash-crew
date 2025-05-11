@@ -94,7 +94,7 @@ const currentUserSlice = createSlice({
     initialState: initialState,
     reducers: {
         clearUser(state) {
-            state = initialState;
+            return state = initialState;
         }
     },
     extraReducers: (builder) => {

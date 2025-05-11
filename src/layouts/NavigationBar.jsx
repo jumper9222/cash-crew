@@ -2,23 +2,29 @@ import { Button, Col, Container, Image, Navbar, NavDropdown, Row } from "react-b
 import { Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
-import { clearUser } from "../features/current-user/currentUserSlice";
 import placeHolderProfilePic from '../assets/undraw_profile-pic_fatv.svg'
 import cashcrewLogo from '../assets/cash-crew-logo-no-background.png'
+import { persistStore } from "redux-persist";
+import store from "../store";
 import { clearFriends } from "../features/friends/friendsSlice";
+import { clearUser } from "../features/current-user/currentUserSlice";
+import { clearTransactions } from "../features/transactions/transactionsSlice";
 
 export default function NavigationBar() {
-    const currentUser = useSelector(state => state.currentUser)
+    const currentUser = useSelector(state => state.currentUser);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const persistor = persistStore(store);
 
     const handleLogout = () => {
         auth.signOut()
             .then(() => {
+                persistor.purge();
                 dispatch(clearUser());
                 dispatch(clearFriends());
-            }
-            )
+                dispatch(clearTransactions());
+                console.log('persistor', persistor)
+            })
             .then(() => navigate('/'))
     }
 
