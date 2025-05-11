@@ -2,18 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 import { addFriend, fetchFriendsByEmail } from "./friendsActions";
 import { getCurrentUserFromDB } from "../current-user/currentUserActions";
 
+const initialState = {
+    friends: {},
+    friendEmails: [],
+    loading: false
+}
+
 const friendsSlice = createSlice({
     name: 'friends',
-    initialState: {
-        friends: {},
-        friendEmails: [],
-        loading: false
-    },
+    initialState: initialState,
     reducers: {
         clearFriends(state) {
-            state.friends = {};
-            state.friendEmails = [];
-            state.loading = false;
+            return state = initialState;
         }
     },
     extraReducers: (builder) => {
