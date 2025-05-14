@@ -9,18 +9,7 @@ import {
     // updateComment,
     updateTransaction
 } from "./transactionsActions";
-
-const initialState = {
-    transactions: {},
-    transactionIds: [],
-    comments: {},
-    splits: {},
-    loading: {
-        transactions: false,
-        fetchingTransactions: false,
-        comments: false,
-    }
-}
+import { initialState } from "../../configs/transactionsConfigs";
 
 const transactionsSlice = createSlice({
     name: "transactions",
